@@ -40,9 +40,9 @@
         "name": "Pat York",
         "category": "Sound Healing",
         "description": "Powerful vibrations that harmonize your mind and body",
-        "offers": ["Permaculture Design", "Consultation"],
-        "tags": ["permaculture", "sustainable", "consulting"],
-        "availability": "Weekends"
+        "offers": ["Sound meditation", "Forestry consulting"],
+        "tags": ["Yoga", "Meditation", "Gongs"],
+        "availability": "weekdays"
     },
     {
         "id": "6",

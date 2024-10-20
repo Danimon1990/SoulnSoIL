@@ -1,0 +1,182 @@
+[
+    {
+        "id": "1",
+        "name": "Laura Haldorson",
+        "category": "Health Practices",
+        "description": "Dance Instructor specializing in mindfulness and holistic well-being.",
+        "offers": ["Reiki", "dance Workshops"],
+        "tags": ["yoga", "mindfulness", "holistic"],
+        "availability": "Weekdays 9am - 5pm"
+    },
+    {
+        "id": "2",
+        "name": "Wayne Waiseman",
+        "category": "Environmental Knowledge",
+        "description": "Permaculture expert offering consultations on sustainable farming.",
+        "offers": ["Permaculture Design", "Consultation"],
+        "tags": ["permaculture", "sustainable", "consulting"],
+        "availability": "Weekends"
+    },
+    {
+        "id": "3",
+        "name": "Shane",
+        "category": "Psicotherapist",
+        "description": "Psychologist and people developer.",
+        "offers": ["Psychoterapy", "Coach"],
+        "tags": ["Health", "sustainable", "consulting"],
+        "availability": "Weekends"
+    },
+    {
+        "id": "4",
+        "name": "Daniel Moreno",
+        "category": "Software developer",
+        "description": "Help you improve your productivity with sofware development",
+        "offers": ["Web Design", "App development"],
+        "tags": ["technology", "AI", "consulting"],
+        "availability": "Weekends"
+    },
+    {
+        "id": "5",
+        "name": "Pat York",
+        "category": "Sound Healing",
+        "description": "Powerful vibrations that harmonize your mind and body",
+        "offers": ["Permaculture Design", "Consultation"],
+        "tags": ["permaculture", "sustainable", "consulting"],
+        "availability": "Weekends"
+    },
+    {
+        "id": "6",
+        "name": "Shelly",
+        "category": "Psychoterapist",
+        "description": "Permaculture expert offering consultations on sustainable farming.",
+        "offers": ["Permaculture Design", "Consultation"],
+        "tags": ["permaculture", "sustainable", "consulting"],
+        "availability": "Weekends"
+    },
+    {
+        "id": "7",
+        "name": "Jery Anderson",
+        "category": "Spirtual pastor",
+        "description": "Non judgemental and full acceptance listening and advicing",
+        "offers": ["Permaculture Design", "Consultation"],
+        "tags": ["permaculture", "sustainable", "consulting"],
+        "availability": "Weekends"
+    }
+    {
+        "id": "8",
+        "name": "Grant Depoy",
+        "category": "Environmental Knowledge",
+        "description": "Permaculture expert offering consultations on sustainable farming.",
+        "offers": ["Permaculture Design", "Consultation"],
+        "tags": ["permaculture", "sustainable", "consulting"],
+        "availability": "Weekends"
+    },
+    {
+        "id": "9",
+        "name": "Bonnie Burton",
+        "category": "Meditation guide",
+        "description": "Permaculture expert offering consultations on sustainable farming.",
+        "offers": ["Permaculture Design", "Consultation"],
+        "tags": ["permaculture", "sustainable", "consulting"],
+        "availability": "Weekends"
+    },
+    {
+        "id": "10",
+        "name": "Paul Frank",
+        "category": "Architect and furniture creator",
+        "description": "Permaculture expert offering consultations on sustainable farming.",
+        "offers": ["Permaculture Design", "Consultation"],
+        "tags": ["permaculture", "sustainable", "consulting"],
+        "availability": "Weekends"
+    },
+    {
+        "id": "11",
+        "name": "Butch Dunn",
+        "category": "Ecological builder",
+        "description": "Permaculture expert offering consultations on sustainable farming.",
+        "offers": ["Permaculture Design", "Consultation"],
+        "tags": ["permaculture", "sustainable", "consulting"],
+        "availability": "Weekends"
+    },
+    {
+        "id": "12",
+        "name": "Blayne Harris",
+        "category": "Environmental Knowledge",
+        "description": "Permaculture expert offering consultations on sustainable farming.",
+        "offers": ["Permaculture Design", "Consultation"],
+        "tags": ["permaculture", "sustainable", "consulting"],
+        "availability": "Weekends"
+    },
+    {
+        "id": "13",
+        "name": "Marquez",
+        "category": "Artist and teacher",
+        "description": "Permaculture expert offering consultations on sustainable farming.",
+        "offers": ["Permaculture Design", "Consultation"],
+        "tags": ["permaculture", "sustainable", "consulting"],
+        "availability": "Weekends"
+    },
+    {
+        "id": "14",
+        "name": "Caleb Cook",
+        "category": "Mechanical Engineer",
+        "description": "Permaculture expert offering consultations on sustainable farming.",
+        "offers": ["Permaculture Design", "Consultation"],
+        "tags": ["permaculture", "sustainable", "consulting"],
+        "availability": "Weekends"
+    },
+    {
+        "id": "15",
+        "name": "Greg Wendt",
+        "category": "Videographer, photographer",
+        "description": "Permaculture expert offering consultations on sustainable farming.",
+        "offers": ["Permaculture Design", "Consultation"],
+        "tags": ["permaculture", "sustainable", "consulting"],
+        "availability": "Weekends"
+    },
+    {
+        "id": "16",
+        "name": "Destiny",
+        "category": "Environmental Knowledge",
+        "description": "Permaculture expert offering consultations on sustainable farming.",
+        "offers": ["Permaculture Design", "Consultation"],
+        "tags": ["permaculture", "sustainable", "consulting"],
+        "availability": "Weekends"
+    },
+    {
+        "id": "17",
+        "name": "Maggie",
+        "category": "Builder",
+        "description": "Permaculture expert offering consultations on sustainable farming.",
+        "offers": ["Permaculture Design", "Consultation"],
+        "tags": ["permaculture", "sustainable", "consulting"],
+        "availability": "Weekends"
+    },
+    {
+        "id": "18",
+        "name": "Ricky",
+        "category": "Interior designer",
+        "description": "Permaculture expert offering consultations on sustainable farming.",
+        "offers": ["Permaculture Design", "Consultation"],
+        "tags": ["permaculture", "sustainable", "consulting"],
+        "availability": "Weekends"
+    },
+    {
+        "id": "18",
+        "name": "Maggie",
+        "category": "Builder",
+        "description": "Permaculture expert offering consultations on sustainable farming.",
+        "offers": ["Permaculture Design", "Consultation"],
+        "tags": ["permaculture", "sustainable", "consulting"],
+        "availability": "Weekends"
+    },
+    {
+        "id": "19",
+        "name": "Noah",
+        "category": "Farmer and teacher",
+        "description": "Permaculture expert offering consultations on sustainable farming.",
+        "offers": ["Permaculture Design", "Consultation"],
+        "tags": ["permaculture", "sustainable", "consulting"],
+        "availability": "Weekends"
+    }
+]

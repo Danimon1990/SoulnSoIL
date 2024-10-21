@@ -28,7 +28,13 @@ struct CommunityProject: Identifiable, Codable {
     let tags: [String]
     let picture: String
 }
-
+//Struct for events
+struct CommunityEvent: Identifiable, Codable {
+    let id: String
+    let title: String
+    let date: Date
+    let description: String
+}
 // DataLoader class to load and decode JSON data
 class DataLoader {
     
@@ -62,5 +68,37 @@ class DataLoader {
         } catch {
             fatalError("Failed to decode projects.json: \(error)")
         }
+    }
+    func loadEventsData(completion: @escaping ([CommunityEvent]?) -> Void) {
+        // Use the raw URL of your GitHub JSON file
+        guard let url = URL(string: "https://raw.githubusercontent.com/Danimon1990/SoulnSoIL/refs/heads/main/Soul%20of%20SoIL/events.json") else {
+            fatalError("Invalid URL for events.json")
+        }
+        
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print("Failed to fetch events.json: \(error)")
+                completion(nil)
+                return
+            }
+            
+            guard let data = data else {
+                print("No data returned for events.json")
+                completion(nil)
+                return
+            }
+            
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601 // Ensure dates are decoded correctly
+            do {
+                let events = try decoder.decode([CommunityEvent].self, from: data)
+                DispatchQueue.main.async {
+                    completion(events)
+                }
+            } catch {
+                print("Failed to decode events.json: \(error)")
+                completion(nil)
+            }
+        }.resume()
     }
 }

@@ -1,25 +1,20 @@
-
 import SwiftUI
 
 struct HomeView: View {
-    // Sample event data
-    @State private var events = [
-        CommunityEvent(title: "Permaculture Workshop", date: Date(), description: "Join us for a hands-on permaculture workshop on Saturday."),
-        CommunityEvent(title: "Community Potluck", date: Date().addingTimeInterval(86400 * 2), description: "Potluck dinner on Sunday evening."),
-        CommunityEvent(title: "Yoga Class", date: Date().addingTimeInterval(86400 * 5), description: "Outdoor yoga class in the garden.")
-    ]
-
+    @State private var events: [CommunityEvent] = []
+    @State private var isLoading = true
+    
     var body: some View {
         NavigationView {
             VStack(alignment: .leading, spacing: 20) {
-                // Full intro text
+                // Intro Text
                 Text("""
                     A growing conscious community in Southern Illinois where we live in solidarity with people, in peace with nature, and in truth within ourselves.
                     """)
                     .font(.body)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal)
-
+                
                 // List of Upcoming Events
                 List(events) { event in
                     NavigationLink(destination: EventDetailView(event: event)) {
@@ -33,17 +28,24 @@ struct HomeView: View {
                     }
                 }
                 .navigationTitle("Community Events")
+                .onAppear {
+                    loadEvents()
+                }
             }
             .padding()
         }
     }
-}
-
-struct CommunityEvent: Identifiable {
-    let id = UUID()
-    let title: String
-    let date: Date
-    let description: String
+    
+    // Load Events from DataLoader
+    private func loadEvents() {
+        let dataLoader = DataLoader()
+        dataLoader.loadEventsData { loadedEvents in
+            if let loadedEvents = loadedEvents {
+                self.events = loadedEvents
+            }
+            self.isLoading = false
+        }
+    }
 }
 
 struct EventDetailView: View {
@@ -56,7 +58,7 @@ struct EventDetailView: View {
                 .padding(.top)
             Text("Date: \(event.date, style: .date)")
                 .font(.title2)
-            Text("Description: \(event.description)")
+            Text(event.description)
                 .font(.body)
                 .padding(.top)
             Spacer()
@@ -65,10 +67,3 @@ struct EventDetailView: View {
         .navigationTitle(event.title)
     }
 }
-
-struct HomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeView()
-    }
-}
-

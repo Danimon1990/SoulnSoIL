@@ -154,7 +154,7 @@
     },
     {
         "id": "18",
-        "name": "Ricky",
+        "name": "Ricky Crossley",
         "category": "Interior designer",
         "description": "Permaculture expert offering consultations on sustainable farming.",
         "offers": ["Permaculture Design", "Consultation"],
@@ -163,7 +163,7 @@
     },
     {
         "id": "18",
-        "name": "Maggie",
+        "name": "Anne",
         "category": "Builder",
         "description": "Permaculture expert offering consultations on sustainable farming.",
         "offers": ["Permaculture Design", "Consultation"],
@@ -172,7 +172,7 @@
     },
     {
         "id": "19",
-        "name": "Noah",
+        "name": "Noah Scalero",
         "category": "Farmer and teacher",
         "description": "Permaculture expert offering consultations on sustainable farming.",
         "offers": ["Permaculture Design", "Consultation"],

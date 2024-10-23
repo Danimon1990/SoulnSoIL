@@ -67,3 +67,9 @@ struct EventDetailView: View {
         .navigationTitle(event.title)
     }
 }
+struct HomeView_Previews: PreviewProvider {
+    static var previews: some View {
+        HomeView()
+    }
+}
+

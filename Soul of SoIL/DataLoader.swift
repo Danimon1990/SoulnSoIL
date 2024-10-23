@@ -1,10 +1,3 @@
-//
-//  DataLoader.swift
-//  Soul of SoIL
-//
-//  Created by Daniel Moreno on 10/17/24.
-//
-
 import Foundation
 
 // Struct for Community Members (People)
@@ -28,68 +21,102 @@ struct CommunityProject: Identifiable, Codable {
     let tags: [String]
     let picture: String
 }
-//Struct for events
+
+// Struct for Community Events
 struct CommunityEvent: Identifiable, Codable {
     let id: String
     let title: String
     let date: Date
     let description: String
 }
-// DataLoader class to load and decode JSON data
+
 class DataLoader {
-    
-    // Load People JSON Data
-    func loadPeopleData() -> [CommunityMember] {
-        guard let url = Bundle.main.url(forResource: "people", withExtension: "json") else {
-            fatalError("Failed to locate people.json in bundle.")
+
+    // Load People JSON Data from GitHub
+    func loadPeopleData(completion: @escaping ([CommunityMember]?) -> Void) {
+        guard let url = URL(string: "https://raw.githubusercontent.com/Danimon1990/SoulnSoIL/refs/heads/main/Soul%20of%20SoIL/people.json") else {
+            fatalError("Invalid URL for people.json")
         }
-        
-        do {
-            let data = try Data(contentsOf: url)
+
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print("Failed to fetch people.json: \(error)")
+                completion(nil)
+                return
+            }
+
+            guard let data = data else {
+                print("No data returned for people.json")
+                completion(nil)
+                return
+            }
+
             let decoder = JSONDecoder()
-            let people = try decoder.decode([CommunityMember].self, from: data)
-            return people
-        } catch {
-            fatalError("Failed to decode people.json: \(error)")
-        }
+            do {
+                let people = try decoder.decode([CommunityMember].self, from: data)
+                DispatchQueue.main.async {
+                    completion(people)
+                }
+            } catch {
+                print("Failed to decode people.json: \(error)")
+                completion(nil)
+            }
+        }.resume()
     }
-    
-    // Load Projects JSON Data
-    func loadProjectsData() -> [CommunityProject] {
-        guard let url = Bundle.main.url(forResource: "projects", withExtension: "json") else {
-            fatalError("Failed to locate projects.json in bundle.")
+
+    // Load Projects JSON Data from GitHub
+    func loadProjectsData(completion: @escaping ([CommunityProject]?) -> Void) {
+        guard let url = URL(string: "https://raw.githubusercontent.com/Danimon1990/SoulnSoIL/refs/heads/main/Soul%20of%20SoIL/projects.json") else {
+            fatalError("Invalid URL for projects.json")
         }
-        
-        do {
-            let data = try Data(contentsOf: url)
+
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print("Failed to fetch projects.json: \(error)")
+                completion(nil)
+                return
+            }
+
+            guard let data = data else {
+                print("No data returned for projects.json")
+                completion(nil)
+                return
+            }
+
             let decoder = JSONDecoder()
-            let projects = try decoder.decode([CommunityProject].self, from: data)
-            return projects
-        } catch {
-            fatalError("Failed to decode projects.json: \(error)")
-        }
+            do {
+                let projects = try decoder.decode([CommunityProject].self, from: data)
+                DispatchQueue.main.async {
+                    completion(projects)
+                }
+            } catch {
+                print("Failed to decode projects.json: \(error)")
+                completion(nil)
+            }
+        }.resume()
     }
+
+    // Load Events JSON Data from GitHub
     func loadEventsData(completion: @escaping ([CommunityEvent]?) -> Void) {
-        // Use the raw URL of your GitHub JSON file
         guard let url = URL(string: "https://raw.githubusercontent.com/Danimon1990/SoulnSoIL/refs/heads/main/Soul%20of%20SoIL/events.json") else {
             fatalError("Invalid URL for events.json")
         }
-        
+
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
                 print("Failed to fetch events.json: \(error)")
                 completion(nil)
                 return
             }
-            
+
             guard let data = data else {
                 print("No data returned for events.json")
                 completion(nil)
                 return
             }
-            
+
             let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .iso8601 // Ensure dates are decoded correctly
+            decoder.dateDecodingStrategy = .iso8601
             do {
                 let events = try decoder.decode([CommunityEvent].self, from: data)
                 DispatchQueue.main.async {

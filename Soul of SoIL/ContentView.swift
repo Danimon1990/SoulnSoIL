@@ -30,8 +30,8 @@ struct ContentView: View {
 
                 // Welcome Text
                 Text("""
-                    Welcome to the Soul on SoIL app,
-                    a growing conscious community in Southern Illinois where we decide to live in solidarity with people, in peace with nature, and in truth within ourselves.
+                    Welcome to the Soul n' SoIL app,
+                    used to connect a growing conscious community in Southern Illinois where we decide to live in solidarity with people, in peace with nature, and in truth within ourselves.
                     Understanding that we are part of a bigger project that we co-create.
                     """)
                     .font(.body)

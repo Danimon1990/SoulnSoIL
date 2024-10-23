@@ -1,12 +1,12 @@
 import SwiftUI
 
 struct ProjectsDirectoryView: View {
-    // Load projects data using DataLoader
-    let projects = DataLoader().loadProjectsData()
-
+    @State private var projects: [CommunityProject] = []
+    @State private var searchText = ""
+    
     var body: some View {
         NavigationView {
-            List(projects) { project in
+            List(filteredProjects) { project in
                 NavigationLink(destination: ProjectDetailView(project: project)) {
                     VStack(alignment: .leading) {
                         Text(project.name)
@@ -14,13 +14,31 @@ struct ProjectsDirectoryView: View {
                         Text(project.location)
                             .font(.subheadline)
                             .foregroundColor(.gray)
-                        Text(project.category)
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
                     }
                 }
             }
             .navigationTitle("Projects Directory")
+            .onAppear {
+                loadProjects()
+            }
+            .searchable(text: $searchText, prompt: "Search Projects")
+        }
+    }
+    
+    private var filteredProjects: [CommunityProject] {
+        if searchText.isEmpty {
+            return projects
+        } else {
+            return projects.filter { $0.name.contains(searchText) || $0.category.contains(searchText) }
+        }
+    }
+    
+    private func loadProjects() {
+        let dataLoader = DataLoader()
+        dataLoader.loadProjectsData { loadedProjects in
+            if let loadedProjects = loadedProjects {
+                self.projects = loadedProjects
+            }
         }
     }
 }

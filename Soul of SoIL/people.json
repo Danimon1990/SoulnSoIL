@@ -30,8 +30,11 @@
         "id": "4",
         "name": "Daniel Sebastian Moreno",
         "category": "Software developer",
-        "description": "Help you improve your productivity with sofware development",
-        "offers": ["Web Design", "App development"],
+        "description": "With a background in software development and a passion for supporting conscious communities, I specialize in creating tailored tech solutions that help businesses and projects thrive. I’ve developed apps that connect and empower communities, and now I’m offering my services to help improve your operations or production with innovative software tools.
+
+Whether you’re looking to streamline your processes, enhance your online presence, or bring a fresh digital approach to your work, I’m here to help. Let’s collaborate to create solutions that align with your vision and values!
+",
+        "offers": ["Web Design", "App development", "Psychology"],
         "tags": ["technology", "AI", "consulting"],
         "availability": "Weekends"
     },

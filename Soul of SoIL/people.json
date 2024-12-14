@@ -2,16 +2,38 @@
     {
         "id": "1",
         "name": "John Doe",
-        "category": "Gardener",
-        "description": "A passionate gardener providing organic produce.",
+        "category": "Permaculture Expert",
+        "description": "Experienced permaculture designer and educator.",
         "offers": [
-            
-            "Gardening", "blowing"
-            
+            {
+                "id": "1",
+                "type": "Service",
+                "title": "Permaculture Design Consultation",
+                "description": "Helping you design sustainable ecosystems."
+            },
+            {
+                "id": "2",
+                "type": "Product",
+                "title": "Compost",
+                "description": "High-quality organic compost for gardens."
+            }
         ],
-        "tags": ["Organic", "Local"],
+        "tags": ["permaculture", "gardening"],
         "availability": "Weekdays",
-        "contact": "johndoe@example.com",
-        "picture": "john_profile"
-    }
-]
+        "contact": "john@example.com",
+        "picture": "john_doe.jpg"
+    },
+    {
+        "id": "2",
+        "name": "Jane Smith",
+        "category": "Herbalist",
+        "description": "Providing herbal remedies and education.",
+        "offers": [
+            {
+                "id": "3",
+                "type": "Product",
+                "title": "Herbal Tea",
+                "description": "Soothing herbal blends for relaxation."
+            }
+        ],
+        "tags": ["herbs",

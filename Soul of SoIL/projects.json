@@ -4,28 +4,18 @@
         "name": "Community Garden",
         "location": "Downtown",
         "category": "Agriculture",
-        "description": "A shared garden for growing food and building community.",
+        "description": "A place for people to grow together.",
         "offers": [
             {
-                "id": "4",
-                "type": "Service",
-                "title": "Garden Workshops",
-                "description": "Learn sustainable gardening practices."
+                "id": "201",
+                "type": "Product",
+                "name": "Fresh Vegetables",
+                "description": "Organic vegetables from the community garden."
             }
         ],
-        "contact": "communitygarden@example.com",
-        "tags": ["community", "gardening"],
+        "contact": "garden@example.com",
+        "tags": ["community", "green"],
+        "contact": "",
         "picture": "community_garden.jpg"
-    },
-    {
-        "id": "2",
-        "name": "Green Energy Initiative",
-        "location": "Uptown",
-        "category": "Energy",
-        "description": "Promoting renewable energy in the community.",
-        "offers": [],
-        "contact": "greenenergy@example.com",
-        "tags": ["renewable", "energy"],
-        "picture": "green_energy.jpg"
     }
 ]

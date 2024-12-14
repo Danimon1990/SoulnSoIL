@@ -6,9 +6,11 @@ struct CommunityMember: Identifiable, Codable {
     let name: String
     let category: String
     let description: String
-    let offers: [String]
+    let offers: [Offer]
     let tags: [String]
     let availability: String
+    let contact: String
+    let picture: String
 }
 
 // Struct for Community Projects
@@ -18,23 +20,96 @@ struct CommunityProject: Identifiable, Codable {
     let location: String
     let category: String
     let description: String
+    let offers: [Offer]?
+    let contact: String
     let tags: [String]
     let picture: String
 }
 
-// Struct for Community Events
-struct CommunityEvent: Identifiable, Codable {
+// Struct for Offers
+struct Offer: Identifiable, Codable {
     let id: String
     let title: String
-    let date: Date
+    let type: String
     let description: String
 }
 
-class DataLoader {
+// Struct for Events
+struct Event: Identifiable, Codable {
+    let id: String
+    let title: String
+    let date: String
+    let time: String
+    let location: String
+    let description: String
+}
+struct Offering: Identifiable {
+    let id: String
+    let title: String
+    let sourceName: String
+    let sourceType: String // "Person" or "Project"
+    let sourceDescription: String
+    let contact: String?
+}
+// DataLoader Extension for Offerings
+extension DataLoader {
+    func loadOfferings(
+        people: [CommunityMember],
+        projects: [CommunityProject],
+        completion: @escaping ([Offering]) -> Void
+    ) {
+        var offerings: [Offering] = []
 
+        // Extract Offers from Community Members
+        for person in people {
+            for offer in person.offers {
+                offerings.append(
+                    Offering(
+                        id: UUID().uuidString,
+                        title: offer.title, // Access the title of the `Offer`
+                        sourceName: person.name,
+                        sourceType: "Person",
+                        sourceDescription: person.description,
+                        contact: person.contact
+                    )
+                )
+            }
+        }
+
+        // Extract Offers from Community Projects
+        for project in projects {
+                    if let projectOffers = project.offers { // Safely unwrap `project.offers`
+                        for offer in projectOffers {
+                            offerings.append(
+                                Offering(
+                                    id: UUID().uuidString,
+                                    title: offer.title,
+                                    sourceName: project.name,
+                                    sourceType: "Project",
+                                    sourceDescription: project.description,
+                                    contact: project.contact
+                                )
+                            )
+                        }
+                    }
+                }
+
+        // Complete with Combined Offerings
+        completion(offerings)
+    }
+}
+// Struct for posts
+struct Post: Identifiable, Codable {
+    let id: UUID
+    let title: String
+    let content: String
+    let author: String
+    let timestamp: Date
+}
+class DataLoader {
     // Load People JSON Data from GitHub
     func loadPeopleData(completion: @escaping ([CommunityMember]?) -> Void) {
-        guard let url = URL(string: "https://raw.githubusercontent.com/Danimon1990/SoulnSoIL/refs/heads/main/Soul%20of%20SoIL/people.json") else {
+        guard let url = URL(string: "https://raw.githubusercontent.com/Danimon1990/SoulnSoIL/main/Soul%20of%20SoIL/people.json") else {
             fatalError("Invalid URL for people.json")
         }
 
@@ -66,7 +141,7 @@ class DataLoader {
 
     // Load Projects JSON Data from GitHub
     func loadProjectsData(completion: @escaping ([CommunityProject]?) -> Void) {
-        guard let url = URL(string: "https://raw.githubusercontent.com/Danimon1990/SoulnSoIL/refs/heads/main/Soul%20of%20SoIL/projects.json") else {
+        guard let url = URL(string: "https://raw.githubusercontent.com/Danimon1990/SoulnSoIL/main/Soul%20of%20SoIL/projects.json") else {
             fatalError("Invalid URL for projects.json")
         }
 
@@ -97,8 +172,8 @@ class DataLoader {
     }
 
     // Load Events JSON Data from GitHub
-    func loadEventsData(completion: @escaping ([CommunityEvent]?) -> Void) {
-        guard let url = URL(string: "https://raw.githubusercontent.com/Danimon1990/SoulnSoIL/refs/heads/main/Soul%20of%20SoIL/events.json") else {
+    func loadEventsData(completion: @escaping ([Event]?) -> Void) {
+        guard let url = URL(string: "https://raw.githubusercontent.com/Danimon1990/SoulnSoIL/main/Soul%20of%20SoIL/events.json") else {
             fatalError("Invalid URL for events.json")
         }
 
@@ -116,9 +191,8 @@ class DataLoader {
             }
 
             let decoder = JSONDecoder()
-            decoder.dateDecodingStrategy = .iso8601
             do {
-                let events = try decoder.decode([CommunityEvent].self, from: data)
+                let events = try decoder.decode([Event].self, from: data)
                 DispatchQueue.main.async {
                     completion(events)
                 }

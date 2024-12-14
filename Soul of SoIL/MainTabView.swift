@@ -7,37 +7,41 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @Binding var isAuthenticated: Bool // Binding to control login status
+
     var body: some View {
         TabView {
             // Home Tab
-            HomeView()
+            HomeView(isAuthenticated: $isAuthenticated)
                 .tabItem {
-                    Image(systemName: "house.fill")
-                    Text("Home")
+                    Label("Home", systemImage: "house")
                 }
 
-            // People Directory Tab
-            PeopleDirectoryView()
+            // Network Tab
+            NetworkView()
                 .tabItem {
-                    Image(systemName: "person.3.fill")
-                    Text("People")
+                    Label("Network", systemImage: "person.3")
                 }
 
-            // Projects Directory Tab
-            ProjectsDirectoryView()
+            // Offerings Tab
+            OfferingsView()
                 .tabItem {
-                    Image(systemName: "map.fill")
-                    Text("Projects")
+                    Label("Offerings", systemImage: "hand.raised")
                 }
         }
-    }
-}
-
-
-
-
-struct MainTabView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainTabView()
+        .toolbar {
+                        // Log-out button in the top-right corner
+                        ToolbarItem(placement: .navigationBarTrailing) {
+                            Button(action: {
+                                isAuthenticated = false // Log the user out
+                            }) {
+                                Image(systemName: "rectangle.portrait.and.arrow.right") // Log-out icon
+                                    .foregroundColor(.red)
+                            }
+                            .buttonStyle(BorderlessButtonStyle())
+                        }
+                    }
+        
+        .navigationBarBackButtonHidden(true) // Hide the back button
     }
 }

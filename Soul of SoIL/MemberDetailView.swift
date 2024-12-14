@@ -19,15 +19,10 @@ struct MemberDetailView: View {
             Text("Description: \(member.description)")
                 .font(.body)
                 .padding(.top)
+            Text("Offers: \(member.offers.map(\.title).joined(separator: ", "))")
             Spacer()
         }
         .padding()
         .navigationTitle(member.name)
-    }
-}
-
-struct MemberDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        MemberDetailView(member: CommunityMember(id: "1", name: "Alice", category: "Health Practices", description: "Yoga Instructor", offers: ["Yoga Classes"], tags: ["yoga", "wellness"], availability: "Weekdays"))
     }
 }

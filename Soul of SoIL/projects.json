@@ -1,110 +1,12 @@
 [
     {
         "id": "1",
-        "name": "Cobden Cottage",
-        "location": "123 Green Road",
-        "category": "Cottage",
-        "description": "Organic produce and community-supported agriculture.",
-        "tags": ["organic", "farm", "sustainable"],
-        "picture": "green_acres_farm.jpg"
-    },
-    {
-        "id": "2",
-        "name": "True Nature",
-        "location": "789 Eco Ave",
-        "category": "Market",
-        "description": "Eco-friendly products and local goods.",
-        "tags": ["eco-friendly", "market", "local"],
-        "picture": "earth_market.jpg"
-    },
-    {
-        "id": "3",
-        "name": "Center for Lost Arts",
-        "location": "789 Eco Ave",
-        "category": "Market",
-        "description": "Eco-friendly products and local goods.",
-        "tags": ["eco-friendly", "market", "local"],
-        "picture": "earth_market.jpg"
-    },
-    {
-        "id": "4",
-        "name": "Butterscotch Castle",
-        "location": "789 Eco Ave",
-        "category": "Market",
-        "description": "Eco-friendly products and local goods.",
-        "tags": ["eco-friendly", "market", "local"],
-        "picture": "earth_market.jpg"
-    },
-    {
-        "id": "5",
-        "name": "Cobden Village Shops",
-        "location": "789 Eco Ave",
-        "category": "Market",
-        "description": "Eco-friendly products and local goods.",
-        "tags": ["eco-friendly", "market", "local"],
-        "picture": "earth_market.jpg"
-    },
-    {
-        "id": "6",
-        "name": "Leaf",
-        "location": "789 Eco Ave",
-        "category": "Market",
-        "description": "Eco-friendly products and local goods.",
-        "tags": ["eco-friendly", "market", "local"],
-        "picture": "earth_market.jpg"
-    },
-    {
-        "id": "7",
-        "name": "All season farms",
-        "location": "789 Eco Ave",
-        "category": "Market",
-        "description": "Eco-friendly products and local goods.",
-        "tags": ["eco-friendly", "market", "local"],
-        "picture": "earth_market.jpg"
-    },
-    {
-        "id": "8",
-        "name": "The island Escape Room",
-        "location": "789 Eco Ave",
-        "category": "Market",
-        "description": "Eco-friendly products and local goods.",
-        "tags": ["eco-friendly", "market", "local"],
-        "picture": "earth_market.jpg"
-    },
-    {
-        "id": "9",
-        "name": "BeetRoot farms",
-        "location": "789 Eco Ave",
-        "category": "Market",
-        "description": "Eco-friendly products and local goods.",
-        "tags": ["eco-friendly", "market", "local"],
-        "picture": "earth_market.jpg"
-    },
-    {
-        "id": "10",
-        "name": "Permaculture Project",
-        "location": "789 Eco Ave",
-        "category": "Market",
-        "description": "Eco-friendly products and local goods.",
-        "tags": ["eco-friendly", "market", "local"],
-        "picture": "earth_market.jpg"
-    },
-    {
-        "id": "11",
-        "name": "Project Human X",
-        "location": "789 Eco Ave",
-        "category": "Market",
-        "description": "Eco-friendly products and local goods.",
-        "tags": ["eco-friendly", "market", "local"],
-        "picture": "earth_market.jpg"
-    },
-    {
-        "id": "12",
-        "name": "New Earth",
-        "location": "789 Eco Ave",
-        "category": "Market",
-        "description": "Eco-friendly products and local goods.",
-        "tags": ["eco-friendly", "market", "local"],
-        "picture": "earth_market.jpg"
+        "name": "Community Garden",
+        "location": "Downtown",
+        "category": "Agriculture",
+        "description": "A place for people to grow together.",
+        "offers": [],
+        "tags": ["Community", "Green"],
+        "picture": "community_garden"
     }
 ]

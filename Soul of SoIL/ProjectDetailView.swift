@@ -29,9 +29,3 @@ struct ProjectDetailView: View {
         .navigationTitle(project.name)
     }
 }
-
-struct ProjectDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProjectDetailView(project: CommunityProject(id: "1", name: "Green Acres Farm", location: "123 Green Road", category: "Farm", description: "Organic produce and community-supported agriculture.", tags: ["organic", "farm"], picture: "green_acres_farm.jpg"))
-    }
-}

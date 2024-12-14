@@ -1,0 +1,26 @@
+[
+  {
+      "id": "1",
+      "title": "Community Gardening Day",
+      "date": "2024-12-29",
+      "time": "10:00 AM",
+      "location": "Community Garden",
+      "description": "Join us for a day of gardening and learning."
+          },
+  {
+      "id": "2",
+      "title": "Community Gardening Day",
+      "date": "2024-12-20",
+      "time": "10:00 AM",
+      "location": "Community Garden",
+      "description": "Join us for a day of gardening and learning."
+  },
+  {
+      "id": "3",
+      "title": "Community Gardening Day",
+      "date": "2024-12-22",
+      "time": "10:00 AM",
+      "location": "Community Garden",
+      "description": "Join us for a day of gardening and learning."
+  }
+]

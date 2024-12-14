@@ -36,4 +36,9 @@
                 "description": "Soothing herbal blends for relaxation."
             }
         ],
-        "tags": ["herbs",
+        "tags": ["herbs", "wellness"],
+        "availability": "Weekends",
+        "contact": "jane@example.com",
+        "picture": "jane_smith.jpg"
+    }
+]

@@ -1,2 +1,6 @@
 
 Soul of SoIL.xcodeproj/project.xcworkspace/xcuserdata/danimore.xcuserdatad/UserInterfaceState.xcuserstate
+# Ignore Xcode state and user files
+*.xcuserstate
+*.xcuserdata/
+*.swp

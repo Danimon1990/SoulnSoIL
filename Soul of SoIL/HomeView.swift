@@ -78,30 +78,31 @@ struct HomeView: View {
                         .listStyle(PlainListStyle())
                     }
                 } else if selectedSection == .board {
-                    CommunityBoardView() // Placeholder for Community Board
+                    CommunityBoardView()
                 }
 
                 Spacer()
             }
             .onAppear {
-                loadEvents() // Load events from JSON
+                loadEvents()
             }
         }
     }
 
     private func loadEvents() {
-        guard let url = Bundle.main.url(forResource: "events", withExtension: "json") else {
-            print("Failed to locate events.json in bundle.")
-            return
+        let dataLoader = DataLoader()
+        dataLoader.loadEventsData { loadedEvents in
+            if let loadedEvents = loadedEvents {
+                self.events = loadedEvents
+            }
         }
+    }
+}
 
-        do {
-            let data = try Data(contentsOf: url)
-            let decoder = JSONDecoder()
-            let loadedEvents = try decoder.decode([Event].self, from: data)
-            events = loadedEvents
-        } catch {
-            print("Failed to decode events.json: \(error)")
-        }
+
+
+struct HomeView_Previews: PreviewProvider {
+    static var previews: some View {
+        HomeView(isAuthenticated: .constant(true))
     }
 }

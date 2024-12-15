@@ -30,18 +30,23 @@ struct MainTabView: View {
                 }
         }
         .toolbar {
-                        // Log-out button in the top-right corner
-                        ToolbarItem(placement: .navigationBarTrailing) {
-                            Button(action: {
-                                isAuthenticated = false // Log the user out
-                            }) {
-                                Image(systemName: "rectangle.portrait.and.arrow.right") // Log-out icon
-                                    .foregroundColor(.red)
-                            }
-                            .buttonStyle(BorderlessButtonStyle())
-                        }
-                    }
-        
+            // Log-out button in the top-right corner
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: {
+                    isAuthenticated = false // Log the user out
+                }) {
+                    Image(systemName: "rectangle.portrait.and.arrow.right") // Log-out icon
+                        .foregroundColor(.red)
+                }
+                .buttonStyle(BorderlessButtonStyle())
+            }
+        }
         .navigationBarBackButtonHidden(true) // Hide the back button
+    }
+}
+
+struct MainTabView_Previews: PreviewProvider {
+    static var previews: some View {
+        MainTabView(isAuthenticated: .constant(true))
     }
 }

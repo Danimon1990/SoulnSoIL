@@ -27,7 +27,6 @@
 		8B3574F82CBF53D400D76984 /* Soul of SoIL.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Soul of SoIL.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B3575092CBF53D500D76984 /* Soul of SoILTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Soul of SoILTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8B3575132CBF53D500D76984 /* Soul of SoILUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Soul of SoILUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		8BC2D2912D0EAAC000C8C4C7 /* Soul of SoIL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "Soul of SoIL.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -89,13 +88,6 @@
 				8B3574F82CBF53D400D76984 /* Soul of SoIL.app */,
 				8B3575092CBF53D500D76984 /* Soul of SoILTests.xctest */,
 				8B3575132CBF53D500D76984 /* Soul of SoILUITests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		8BC2D2922D0EAAC000C8C4C7 /* Products */ = {
-			isa = PBXGroup;
-			children = (
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -206,12 +198,6 @@
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8B3574F92CBF53D400D76984 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 8BC2D2922D0EAAC000C8C4C7 /* Products */;
-					ProjectRef = 8BC2D2912D0EAAC000C8C4C7 /* Soul of SoIL.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				8B3574F72CBF53D400D76984 /* Soul of SoIL */,
@@ -427,11 +413,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "danimore.com.Soul-of-SoIL";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				XROS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Debug;
@@ -466,11 +452,11 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "danimore.com.Soul-of-SoIL";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = auto;
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				XROS_DEPLOYMENT_TARGET = 2.0;
 			};
 			name = Release;

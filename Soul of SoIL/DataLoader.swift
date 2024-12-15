@@ -38,11 +38,13 @@ struct Offer: Identifiable, Codable {
 struct Event: Identifiable, Codable {
     let id: String
     let title: String
-    let date: String
+    let date: String // Assuming "yyyy-MM-dd"
     let time: String
     let location: String
     let description: String
 }
+
+// Struct for Offerings
 struct Offering: Identifiable {
     let id: String
     let title: String
@@ -51,54 +53,8 @@ struct Offering: Identifiable {
     let sourceDescription: String
     let contact: String?
 }
-// DataLoader Extension for Offerings
-extension DataLoader {
-    func loadOfferings(
-        people: [CommunityMember],
-        projects: [CommunityProject],
-        completion: @escaping ([Offering]) -> Void
-    ) {
-        var offerings: [Offering] = []
 
-        // Extract Offers from Community Members
-        for person in people {
-            for offer in person.offers {
-                offerings.append(
-                    Offering(
-                        id: UUID().uuidString,
-                        title: offer.title, // Access the title of the `Offer`
-                        sourceName: person.name,
-                        sourceType: "Person",
-                        sourceDescription: person.description,
-                        contact: person.contact
-                    )
-                )
-            }
-        }
-
-        // Extract Offers from Community Projects
-        for project in projects {
-                    if let projectOffers = project.offers { // Safely unwrap `project.offers`
-                        for offer in projectOffers {
-                            offerings.append(
-                                Offering(
-                                    id: UUID().uuidString,
-                                    title: offer.title,
-                                    sourceName: project.name,
-                                    sourceType: "Project",
-                                    sourceDescription: project.description,
-                                    contact: project.contact
-                                )
-                            )
-                        }
-                    }
-                }
-
-        // Complete with Combined Offerings
-        completion(offerings)
-    }
-}
-// Struct for posts
+// Struct for Posts
 struct Post: Identifiable, Codable {
     let id: UUID
     let title: String
@@ -106,14 +62,15 @@ struct Post: Identifiable, Codable {
     let author: String
     let timestamp: Date
 }
+
 class DataLoader {
-    // Load People JSON Data from GitHub
+    // Load People JSON Data
     func loadPeopleData(completion: @escaping ([CommunityMember]?) -> Void) {
         guard let url = URL(string: "https://raw.githubusercontent.com/Danimon1990/SoulnSoIL/main/Soul%20of%20SoIL/people.json") else {
             fatalError("Invalid URL for people.json")
         }
 
-        URLSession.shared.dataTask(with: url) { data, response, error in
+        URLSession.shared.dataTask(with: url) { data, _, error in
             if let error = error {
                 print("Failed to fetch people.json: \(error)")
                 completion(nil)
@@ -139,13 +96,13 @@ class DataLoader {
         }.resume()
     }
 
-    // Load Projects JSON Data from GitHub
+    // Load Projects JSON Data
     func loadProjectsData(completion: @escaping ([CommunityProject]?) -> Void) {
         guard let url = URL(string: "https://raw.githubusercontent.com/Danimon1990/SoulnSoIL/main/Soul%20of%20SoIL/projects.json") else {
             fatalError("Invalid URL for projects.json")
         }
 
-        URLSession.shared.dataTask(with: url) { data, response, error in
+        URLSession.shared.dataTask(with: url) { data, _, error in
             if let error = error {
                 print("Failed to fetch projects.json: \(error)")
                 completion(nil)
@@ -171,13 +128,13 @@ class DataLoader {
         }.resume()
     }
 
-    // Load Events JSON Data from GitHub
+    // Load Events JSON Data
     func loadEventsData(completion: @escaping ([Event]?) -> Void) {
         guard let url = URL(string: "https://raw.githubusercontent.com/Danimon1990/SoulnSoIL/main/Soul%20of%20SoIL/events.json") else {
             fatalError("Invalid URL for events.json")
         }
 
-        URLSession.shared.dataTask(with: url) { data, response, error in
+        URLSession.shared.dataTask(with: url) { data, _, error in
             if let error = error {
                 print("Failed to fetch events.json: \(error)")
                 completion(nil)
@@ -201,5 +158,50 @@ class DataLoader {
                 completion(nil)
             }
         }.resume()
+    }
+
+    // Load Offerings from People and Projects
+    func loadOfferings(
+        people: [CommunityMember],
+        projects: [CommunityProject],
+        completion: @escaping ([Offering]) -> Void
+    ) {
+        var offerings: [Offering] = []
+
+        // Extract Offers from Community Members
+        for person in people {
+            for offer in person.offers {
+                offerings.append(
+                    Offering(
+                        id: UUID().uuidString,
+                        title: offer.title,
+                        sourceName: person.name,
+                        sourceType: "Person",
+                        sourceDescription: person.description,
+                        contact: person.contact
+                    )
+                )
+            }
+        }
+
+        // Extract Offers from Community Projects
+        for project in projects {
+            if let projectOffers = project.offers {
+                for offer in projectOffers {
+                    offerings.append(
+                        Offering(
+                            id: UUID().uuidString,
+                            title: offer.title,
+                            sourceName: project.name,
+                            sourceType: "Project",
+                            sourceDescription: project.description,
+                            contact: project.contact
+                        )
+                    )
+                }
+            }
+        }
+
+        completion(offerings)
     }
 }

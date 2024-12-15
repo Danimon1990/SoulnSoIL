@@ -1,21 +1,74 @@
 [
     {
         "id": "1",
-        "name": "Community Garden",
-        "location": "Downtown",
+        "name": "Green Acres Farm",
+        "location": "123 Green Road",
         "category": "Agriculture",
-        "description": "A place for people to grow together.",
+        "description": "An organic farm providing fresh produce to the local community.",
         "offers": [
             {
-                "id": "201",
+                "id": "1",
+                "title": "Organic Vegetables",
                 "type": "Product",
-                "name": "Fresh Vegetables",
-                "description": "Organic vegetables from the community garden."
+                "description": "Seasonal fresh vegetables grown organically."
+            },
+            {
+                "id": "2",
+                "title": "CSA Membership",
+                "type": "Service",
+                "description": "Weekly subscription boxes of fresh produce delivered to your home."
             }
         ],
-        "contact": "garden@example.com",
-        "tags": ["community", "green"],
-        "contact": "",
+        "tags": ["organic", "farm", "sustainability"],
+        "contact": "info@greenacresfarm.com",
+        "picture": "green_acres_farm.jpg"
+    },
+    {
+        "id": "2",
+        "name": "Community Garden",
+        "location": "Downtown",
+        "category": "Urban Gardening",
+        "description": "A shared space for growing food and fostering community.",
+        "offers": [
+            {
+                "id": "1",
+                "title": "Garden Plots",
+                "type": "Service",
+                "description": "Rent a garden plot and grow your own food."
+            },
+            {
+                "id": "2",
+                "title": "Gardening Workshops",
+                "type": "Workshop",
+                "description": "Learn sustainable urban gardening practices."
+            }
+        ],
+        "tags": ["community", "gardening", "education"],
+        "contact": "contact@communitygarden.org",
         "picture": "community_garden.jpg"
+    },
+    {
+        "id": "3",
+        "name": "Eco Builders Collective",
+        "location": "456 Sustainability Lane",
+        "category": "Natural Building",
+        "description": "An initiative focused on sustainable and natural building methods.",
+        "offers": [
+            {
+                "id": "1",
+                "title": "Natural Building Consulting",
+                "type": "Service",
+                "description": "Expert advice on eco-friendly construction."
+            },
+            {
+                "id": "2",
+                "title": "Straw Bale Workshops",
+                "type": "Workshop",
+                "description": "Hands-on experience in building with straw bales."
+            }
+        ],
+        "tags": ["natural building", "sustainability", "workshops"],
+        "contact": "contact@ecobuilders.com",
+        "picture": "eco_builders_collective.jpg"
     }
 ]

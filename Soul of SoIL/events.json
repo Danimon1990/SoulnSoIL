@@ -1,0 +1,42 @@
+[
+    {
+        "id": "1",
+        "title": "Community Planting Day",
+        "date": "2024-12-20",
+        "time": "10:00 AM",
+        "location": "Community Garden, Downtown",
+        "description": "Join us for a day of planting and learning about sustainable gardening practices. All tools and materials provided."
+    },
+    {
+        "id": "2",
+        "title": "Yoga in the Park",
+        "date": "2024-12-22",
+        "time": "8:00 AM",
+        "location": "Central Park",
+        "description": "Start your morning with a rejuvenating yoga session led by a certified instructor. Bring your own mat!"
+    },
+    {
+        "id": "3",
+        "title": "Permaculture Workshop",
+        "date": "2024-12-23",
+        "time": "1:00 PM",
+        "location": "Green Acres Farm",
+        "description": "Learn the basics of permaculture and how to create sustainable ecosystems. Includes a farm tour and hands-on activities."
+    },
+    {
+        "id": "4",
+        "title": "Winter Solstice Celebration",
+        "date": "2024-12-21",
+        "time": "6:00 PM",
+        "location": "Eco Builders Collective",
+        "description": "Celebrate the winter solstice with music, storytelling, and a potluck dinner. Bring a dish to share!"
+    },
+    {
+        "id": "5",
+        "title": "Composting 101",
+        "date": "2024-12-19",
+        "time": "3:00 PM",
+        "location": "Downtown Library",
+        "description": "Discover the art of composting and how to turn waste into valuable soil. Perfect for beginners."
+    }
+]

@@ -1,0 +1,68 @@
+[
+    {
+        "id": "1",
+        "name": "Alice Smith",
+        "category": "Health Practices",
+        "description": "Certified yoga instructor offering classes for all skill levels.",
+        "offers": [
+            {
+                "id": "1",
+                "title": "Yoga Classes",
+                "type": "Service",
+                "description": "Weekly yoga sessions focusing on flexibility and mindfulness."
+            },
+            {
+                "id": "2",
+                "title": "Private Yoga Lessons",
+                "type": "Service",
+                "description": "One-on-one sessions tailored to your needs."
+            }
+        ],
+        "tags": ["yoga", "wellness"],
+        "availability": "Weekdays",
+        "contact": "alice.smith@yogawellness.com",
+        "picture": "alice_smith.jpg"
+    },
+    {
+        "id": "2",
+        "name": "John Doe",
+        "category": "Sustainable Living",
+        "description": "Expert in permaculture design and natural building techniques.",
+        "offers": [
+            {
+                "id": "1",
+                "title": "Permaculture Consulting",
+                "type": "Service",
+                "description": "Tailored advice on sustainable living and permaculture design."
+            },
+            {
+                "id": "2",
+                "title": "Natural Building Workshops",
+                "type": "Workshop",
+                "description": "Hands-on training in eco-friendly construction methods."
+            }
+        ],
+        "tags": ["permaculture", "eco-friendly", "sustainability"],
+        "availability": "Weekends",
+        "contact": "john.doe@permaculturedesigns.com",
+        "picture": "john_doe.jpg"
+    },
+    {
+        "id": "3",
+        "name": "Emma Johnson",
+        "category": "Arts and Crafts",
+        "description": "Local artist creating eco-friendly handmade crafts.",
+        "offers": [
+            {
+                "id": "1",
+                "title": "Handmade Crafts",
+                "type": "Product",
+                "description": "Eco-friendly crafts made from recycled materials."
+            }
+        ],
+        "tags": ["art", "crafts", "eco-friendly"],
+        "availability": "Flexible",
+        "contact": "emma.johnson@crafts.com",
+        "picture": "emma_johnson.jpg"
+    }
+]

@@ -1,14 +1,16 @@
-
 import SwiftUI
 
 struct CommunityBoardView: View {
     @StateObject private var viewModel = CommunityBoardViewModel()
     @State private var isPresentingNewPostView = false
     @State private var searchText = ""
+    @State private var selectedPost: Post? // To track which post is being commented on
+    @State private var isPresentingCommentView = false // Show CommentView
 
     var body: some View {
         NavigationView {
             VStack {
+                // Search Field
                 TextField("Search posts...", text: $searchText)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
@@ -19,20 +21,40 @@ struct CommunityBoardView: View {
                         .foregroundColor(.gray)
                         .padding()
                 } else {
+                    // List of Posts
                     List(filteredPosts) { post in
-                        NavigationLink(destination: PostView(post: post)) {
-                            VStack(alignment: .leading, spacing: 8) {
-                                Text(post.title)
-                                    .font(.headline)
-                                Text(post.content)
-                                    .lineLimit(2)
-                                    .font(.body)
-                                Text("By \(post.author) • \(formattedDate(post.timestamp))")
-                                    .font(.footnote)
-                                    .foregroundColor(.gray)
+                        VStack(alignment: .leading, spacing: 8) {
+                            // Post Content
+                            Text(post.title)
+                                .font(.headline)
+                            Text(post.content)
+                                .lineLimit(2)
+                                .font(.body)
+                            Text("By \(post.author) • \(formattedDate(post.timestamp))")
+                                .font(.footnote)
+                                .foregroundColor(.gray)
+
+                            // Comments Section
+                            ForEach(post.comments) { comment in
+                                HStack(alignment: .top) {
+                                    Text("\(comment.author):")
+                                        .fontWeight(.bold)
+                                        .foregroundColor(.blue)
+                                    Text(comment.content)
+                                }
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                             }
-                            .padding(.vertical, 8)
+
+                            // Reply Button
+                            Button("Reply") {
+                                selectedPost = post
+                                isPresentingCommentView = true
+                            }
+                            .font(.caption)
+                            .foregroundColor(.green)
                         }
+                        .padding(.vertical, 8)
                     }
                     .listStyle(PlainListStyle())
                 }
@@ -51,6 +73,11 @@ struct CommunityBoardView: View {
             .sheet(isPresented: $isPresentingNewPostView) {
                 NewPostView(viewModel: viewModel)
             }
+            .sheet(isPresented: $isPresentingCommentView) {
+                if let post = selectedPost {
+                    CommentView(post: post, viewModel: viewModel)
+                }
+            }
         }
     }
 
@@ -68,6 +95,6 @@ struct CommunityBoardView: View {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
-        return formatter.string(from: date)
-    }
-}
+                return formatter.string(from: date)
+            }
+        }

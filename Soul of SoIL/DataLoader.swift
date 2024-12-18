@@ -56,10 +56,18 @@ struct Offering: Identifiable {
 
 // Struct for Posts
 struct Post: Identifiable, Codable {
-    let id: UUID
+    let id: String
     let title: String
     let content: String
     let author: String
+    let timestamp: Date
+    var comments: [Comment] // Array of comments
+}
+
+struct Comment: Identifiable, Codable {
+    let id: String
+    let author: String
+    let content: String
     let timestamp: Date
 }
 

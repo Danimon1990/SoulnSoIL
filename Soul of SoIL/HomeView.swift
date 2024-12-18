@@ -42,43 +42,49 @@ struct HomeView: View {
                 .padding()
 
                 if selectedSection == .calendar {
-                    VStack {
-                        // Calendar UI
-                        Text("Community Calendar")
-                            .font(.largeTitle)
-                            .padding(.bottom)
+                    ScrollView { // Add ScrollView here to allow scrolling
+                        VStack {
+                            // Calendar UI
+                            Text("Community Calendar")
+                                .font(.largeTitle)
+                                .padding(.bottom)
 
-                        DatePicker(
-                            "Select a Date",
-                            selection: $selectedDate,
-                            displayedComponents: [.date]
-                        )
-                        .datePickerStyle(GraphicalDatePickerStyle())
-                        .padding()
+                            DatePicker(
+                                "Select a Date",
+                                selection: $selectedDate,
+                                displayedComponents: [.date]
+                            )
+                            .datePickerStyle(GraphicalDatePickerStyle())
+                            .padding()
 
-                        // Event List
-                        Text("Upcoming Events")
-                            .font(.title2)
-                            .padding(.vertical)
+                            // Event List
+                            Text("Upcoming Events")
+                                .font(.title2)
+                                .padding(.vertical)
 
-                        List(events) { event in
-                            NavigationLink(destination: EventView(event: event)) {
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text(event.title)
-                                        .font(.headline)
-                                    Text("\(event.date) at \(event.time)")
-                                        .font(.subheadline)
-                                    Text(event.location)
-                                        .font(.body)
-                                        .foregroundColor(.gray)
+                            ForEach(events) { event in
+                                NavigationLink(destination: EventView(event: event)) {
+                                    VStack(alignment: .leading, spacing: 8) {
+                                        Text(event.title)
+                                            .font(.headline)
+                                        Text("\(event.date) at \(event.time)")
+                                            .font(.subheadline)
+                                        Text(event.location)
+                                            .font(.body)
+                                            .foregroundColor(.gray)
+                                    }
+                                    .padding()
+                                    .background(Color.white)
+                                    .cornerRadius(8)
+                                    .shadow(radius: 1)
                                 }
-                                .padding(.vertical, 8)
+                                .padding(.horizontal)
                             }
                         }
-                        .listStyle(PlainListStyle())
+                        .padding()
                     }
                 } else if selectedSection == .board {
-                    CommunityBoardView()
+                    CommunityBoardView() // Placeholder for Community Board
                 }
 
                 Spacer()
@@ -98,8 +104,6 @@ struct HomeView: View {
         }
     }
 }
-
-
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {

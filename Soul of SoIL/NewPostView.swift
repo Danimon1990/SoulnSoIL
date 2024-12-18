@@ -5,48 +5,44 @@
 //  Created by Daniel Moreno on 11/26/24.
 //
 import SwiftUI
-
 struct NewPostView: View {
-    @Environment(\.presentationMode) var presentationMode
     @ObservedObject var viewModel: CommunityBoardViewModel
-
-    @State private var title = ""
-    @State private var content = ""
-    @State private var author = ""
+    @Binding var username: String // Accept username as a binding
+    @State private var postTitle = ""
+    @State private var postContent = ""
 
     var body: some View {
         NavigationView {
-            Form {
-                Section(header: Text("Title")) {
-                    TextField("Enter the title", text: $title)
-                }
+            VStack(spacing: 20) {
+                TextField("Post Title", text: $postTitle)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding()
 
-                Section(header: Text("Content")) {
-                    TextEditor(text: $content)
-                        .frame(height: 150)
-                }
+                TextEditor(text: $postContent)
+                    .border(Color.gray, width: 1)
+                    .padding()
 
-                Section(header: Text("Author")) {
-                    TextField("Your name", text: $author)
+                Button(action: {
+                    guard !postTitle.isEmpty && !postContent.isEmpty else { return }
+                    viewModel.addPost(title: postTitle, content: postContent, author: username)
+                    postTitle = ""
+                    postContent = ""
+                }) {
+                    Text("Submit")
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.green)
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
                 }
+                .padding()
+                .disabled(postTitle.isEmpty || postContent.isEmpty)
+
+                Spacer()
             }
+            .padding()
             .navigationTitle("New Post")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        presentationMode.wrappedValue.dismiss()
-                    }
-                }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Post") {
-                        if !title.isEmpty && !content.isEmpty && !author.isEmpty {
-                            viewModel.addPost(title: title, content: content, author: author)
-                            presentationMode.wrappedValue.dismiss()
-                        }
-                    }
-                    .disabled(title.isEmpty || content.isEmpty || author.isEmpty)
-                }
-            }
+            .navigationBarTitleDisplayMode(.inline)
         }
     }
 }

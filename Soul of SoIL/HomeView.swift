@@ -8,6 +8,7 @@ enum HomeSection {
 
 struct HomeView: View {
     @Binding var isAuthenticated: Bool
+    @Binding var username: String
     @State private var selectedSection: HomeSection = .calendar
     @State private var events: [Event] = [] // Events data
     @State private var selectedDate: Date = Date()
@@ -84,7 +85,7 @@ struct HomeView: View {
                         .padding()
                     }
                 } else if selectedSection == .board {
-                    CommunityBoardView() // Placeholder for Community Board
+                    CommunityBoardView(username: $username) // Placeholder for Community Board
                 }
 
                 Spacer()
@@ -105,8 +106,3 @@ struct HomeView: View {
     }
 }
 
-struct HomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeView(isAuthenticated: .constant(true))
-    }
-}

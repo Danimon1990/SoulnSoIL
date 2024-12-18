@@ -43,5 +43,16 @@ struct EventView: View {
         .padding()
         .navigationTitle("Event Details")
         .navigationBarTitleDisplayMode(.inline)
-    }
-}
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                ShareLink(
+                    item: "Check out this event: \(event.title) on \(event.date) at \(event.time). Location: \(event.location). Description: \(event.description)"
+                        ) {
+                    Image(systemName: "square.and.arrow.up")
+                                .font(.title2)
+                                .foregroundColor(.blue)
+                        }
+                    }
+                }
+            }
+        }

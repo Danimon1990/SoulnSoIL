@@ -8,11 +8,12 @@ import SwiftUI
 
 struct MainTabView: View {
     @Binding var isAuthenticated: Bool // Binding to control login status
+    @State var username: String
 
     var body: some View {
         TabView {
             // Home Tab
-            HomeView(isAuthenticated: $isAuthenticated)
+            HomeView(isAuthenticated: $isAuthenticated, username: $username)
                 .tabItem {
                     Label("Home", systemImage: "house")
                 }
@@ -45,8 +46,3 @@ struct MainTabView: View {
     }
 }
 
-struct MainTabView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainTabView(isAuthenticated: .constant(true))
-    }
-}

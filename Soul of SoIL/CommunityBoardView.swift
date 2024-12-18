@@ -4,13 +4,14 @@ struct CommunityBoardView: View {
     @StateObject private var viewModel = CommunityBoardViewModel()
     @State private var isPresentingNewPostView = false
     @State private var searchText = ""
-    @State private var selectedPost: Post? // To track which post is being commented on
+    @State private var selectedPost: Post? // To track the selected post
     @State private var isPresentingCommentView = false // Show CommentView
+    @Binding var username: String // Use Binding<String> here
 
     var body: some View {
         NavigationView {
             VStack {
-                // Search Field
+                // Search Bar
                 TextField("Search posts...", text: $searchText)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
@@ -23,38 +24,19 @@ struct CommunityBoardView: View {
                 } else {
                     // List of Posts
                     List(filteredPosts) { post in
-                        VStack(alignment: .leading, spacing: 8) {
-                            // Post Content
-                            Text(post.title)
-                                .font(.headline)
-                            Text(post.content)
-                                .lineLimit(2)
-                                .font(.body)
-                            Text("By \(post.author) • \(formattedDate(post.timestamp))")
-                                .font(.footnote)
-                                .foregroundColor(.gray)
-
-                            // Comments Section
-                            ForEach(post.comments) { comment in
-                                HStack(alignment: .top) {
-                                    Text("\(comment.author):")
-                                        .fontWeight(.bold)
-                                        .foregroundColor(.blue)
-                                    Text(comment.content)
-                                }
-                                .font(.caption)
-                                .foregroundColor(.secondary)
+                        NavigationLink(destination: PostView(post: post, viewModel: viewModel, username: $username)) {
+                            VStack(alignment: .leading, spacing: 8) {
+                                Text(post.title)
+                                    .font(.headline)
+                                Text(post.content)
+                                    .lineLimit(2)
+                                    .font(.body)
+                                Text("By \(post.author) • \(formattedDate(post.timestamp))")
+                                    .font(.footnote)
+                                    .foregroundColor(.gray)
                             }
-
-                            // Reply Button
-                            Button("Reply") {
-                                selectedPost = post
-                                isPresentingCommentView = true
-                            }
-                            .font(.caption)
-                            .foregroundColor(.green)
+                            .padding(.vertical, 8)
                         }
-                        .padding(.vertical, 8)
                     }
                     .listStyle(PlainListStyle())
                 }
@@ -71,12 +53,7 @@ struct CommunityBoardView: View {
                 }
             }
             .sheet(isPresented: $isPresentingNewPostView) {
-                NewPostView(viewModel: viewModel)
-            }
-            .sheet(isPresented: $isPresentingCommentView) {
-                if let post = selectedPost {
-                    CommentView(post: post, viewModel: viewModel)
-                }
+                NewPostView(viewModel: viewModel, username: $username)
             }
         }
     }
@@ -86,7 +63,9 @@ struct CommunityBoardView: View {
             return viewModel.posts
         } else {
             return viewModel.posts.filter { post in
-                post.title.contains(searchText) || post.content.contains(searchText) || post.author.contains(searchText)
+                post.title.localizedCaseInsensitiveContains(searchText) ||
+                post.content.localizedCaseInsensitiveContains(searchText) ||
+                post.author.localizedCaseInsensitiveContains(searchText)
             }
         }
     }
@@ -95,6 +74,6 @@ struct CommunityBoardView: View {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
-                return formatter.string(from: date)
-            }
-        }
+        return formatter.string(from: date)
+    }
+}

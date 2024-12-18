@@ -7,14 +7,15 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var isAuthenticated: Bool = false
+    @State private var isAuthenticated = false
+    @State private var username: String = "" // Define username
 
     var body: some View {
         NavigationStack {
             if isAuthenticated {
-                MainTabView(isAuthenticated: $isAuthenticated)
+                MainTabView(isAuthenticated: $isAuthenticated, username: username) // Pass username
             } else {
-                LoginView(isAuthenticated: $isAuthenticated)
+                LoginView(isAuthenticated: $isAuthenticated, username: $username) // Pass username
             }
         }
     }

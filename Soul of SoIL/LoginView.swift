@@ -2,11 +2,12 @@ import SwiftUI
 import Combine
 
 struct LoginView: View {
-    @State var username = ""
-    @State var password = ""
     @Binding var isAuthenticated: Bool
-    @State private var isLoginFailed = false
-    
+    @Binding var username: String // Add username
+
+    @State private var password: String = ""
+    @State private var isLoginFailed: Bool = false
+
     var body: some View {
         ScrollView {
             VStack(spacing: 20) {
@@ -15,22 +16,22 @@ struct LoginView: View {
                     .scaledToFit()
                     .frame(width: 200, height: 200)
                     .padding()
-                
+
                 Text("Soul n' SoIL")
                     .font(.largeTitle)
                     .fontWeight(.bold)
                     .foregroundColor(.green)
-                
-                TextField("Username", text: $username)
+
+                TextField("Username", text: $username) // Bind username
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.horizontal)
-                
+
                 SecureField("Password", text: $password)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.horizontal)
-                
+
                 Button(action: {
-                    // Replace this with your actual login logic
+                    // Simulated login logic
                     if username == "user" && password == "password" {
                         isAuthenticated = true
                         isLoginFailed = false
@@ -41,20 +42,16 @@ struct LoginView: View {
                     Text("Log In")
                         .font(.headline)
                         .foregroundColor(.white)
-                        .frame(width: 100, height: 45)
+                        .padding()
+                        .frame(width: 200, height: 50)
                         .background(Color.green)
                         .cornerRadius(10)
                 }
                 .alert(isPresented: $isLoginFailed) {
                     Alert(title: Text("Login Failed"), message: Text("Invalid username or password. Please try again."), dismissButton: .default(Text("OK")))
                 }
-                .navigationDestination(isPresented: $isAuthenticated) {
-                    MainTabView(isAuthenticated: $isAuthenticated)
-                }
             }
             .padding()
-            
         }
-    
     }
 }

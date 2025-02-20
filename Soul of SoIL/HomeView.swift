@@ -14,87 +14,37 @@ struct HomeView: View {
     @State private var selectedDate: Date = Date()
 
     var body: some View {
-        NavigationView {
-            VStack {
-                // Section Selector Buttons
-                HStack {
-                    Button(action: {
-                        selectedSection = .calendar
-                    }) {
-                        Text("Calendar")
-                            .font(.headline)
-                            .foregroundColor(selectedSection == .calendar ? .white : .green)
-                            .padding()
-                            .background(selectedSection == .calendar ? Color.green : Color.clear)
-                            .cornerRadius(8)
+            NavigationView {
+                VStack {
+                    SectionSelector(
+                        selectedSection: $selectedSection
+                    )
+
+                    if selectedSection == .calendar {
+                        CalendarSection(
+                            events: $events,
+                            selectedDate: $selectedDate
+                        )
+                    } else if selectedSection == .board {
+                        CommunityBoardView(username: $username)
                     }
 
-                    Button(action: {
-                        selectedSection = .board
-                    }) {
-                        Text("Board")
-                            .font(.headline)
-                            .foregroundColor(selectedSection == .board ? .white : .green)
-                            .padding()
-                            .background(selectedSection == .board ? Color.green : Color.clear)
-                            .cornerRadius(8)
-                    }
+                    Spacer()
                 }
-                .padding()
-
-                if selectedSection == .calendar {
-                    ScrollView { // Add ScrollView here to allow scrolling
-                        VStack {
-                            // Calendar UI
-                            Text("Community Calendar")
-                                .font(.largeTitle)
-                                .padding(.bottom)
-
-                            DatePicker(
-                                "Select a Date",
-                                selection: $selectedDate,
-                                displayedComponents: [.date]
-                            )
-                            .datePickerStyle(GraphicalDatePickerStyle())
-                            .padding()
-
-                            // Event List
-                            Text("Upcoming Events")
-                                .font(.title2)
-                                .padding(.vertical)
-
-                            ForEach(events) { event in
-                                NavigationLink(destination: EventView(event: event)) {
-                                    VStack(alignment: .leading, spacing: 8) {
-                                        Text(event.title)
-                                            .font(.headline)
-                                        Text("\(event.date) at \(event.time)")
-                                            .font(.subheadline)
-                                        Text(event.location)
-                                            .font(.body)
-                                            .foregroundColor(.gray)
-                                    }
-                                    .padding()
-                                    .background(Color.white)
-                                    .cornerRadius(8)
-                                    .shadow(radius: 1)
-                                }
-                                .padding(.horizontal)
-                            }
+                .navigationTitle("Home")
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarTrailing) {
+                        NavigationLink(destination: ProfileView()) {
+                            Image(systemName: "person.circle") // Profile icon
+                                .font(.title)
                         }
-                        .padding()
                     }
-                } else if selectedSection == .board {
-                    CommunityBoardView(username: $username) // Placeholder for Community Board
                 }
-
-                Spacer()
-            }
-            .onAppear {
-                loadEvents()
+                .onAppear {
+                    loadEvents()
+                }
             }
         }
-    }
 
     private func loadEvents() {
         let dataLoader = DataLoader()

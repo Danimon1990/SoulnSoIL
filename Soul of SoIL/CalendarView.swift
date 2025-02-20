@@ -1,83 +1,61 @@
 import SwiftUI
-
+import FirebaseFirestore
 struct CalendarView: View {
-    let events: [Event] // Accept events as a parameter
-    @State private var selectedDate: Date? = nil
+    @State private var events: [Event] = []
+    @State private var selectedDate = Date()
 
     var body: some View {
-        VStack {
-            Text("Community Calendar")
-                .font(.largeTitle)
-                .padding()
+        NavigationView {
+            VStack {
+                // Calendar Display
+                CalendarSection(events: $events, selectedDate: $selectedDate)
 
-            // Calendar UI
-            DatePicker(
-                "Select a Date",
-                selection: Binding<Date>(
-                    get: { selectedDate ?? Date() },
-                    set: { selectedDate = $0 }
-                ),
-                displayedComponents: [.date]
-            )
-            .datePickerStyle(GraphicalDatePickerStyle())
-            .padding()
-            .overlay(highlightedDaysOverlay(), alignment: .center) // Highlight days with events
-
-            // Display the list of events
-            Text("Upcoming Events")
-                .font(.title2)
-                .padding(.vertical)
-
-            List(filteredEvents) { event in
-                VStack(alignment: .leading) {
-                    Text(event.title)
-                        .font(.headline)
-                    Text("\(event.time) at \(event.location)")
-                        .font(.subheadline)
-                    Text(event.description)
-                        .font(.body)
-                        .foregroundColor(.gray)
+                // Upcoming Events List
+                List {
+                    ForEach(events.filter { event in
+                        guard let eventDate = event.date else { return false }
+                        return eventDate >= Date() // Show only future events
+                    }) { event in
+                        NavigationLink(destination: EventView(event: event)) {
+                            VStack(alignment: .leading) {
+                                Text(event.title)
+                                    .font(.headline)
+                                Text(event.date?.formatted(date: .abbreviated, time: .shortened) ?? "Unknown Date")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                            }
+                        }
+                    }
                 }
-                .padding()
+            }
+            .navigationTitle("Community Calendar")
+            .onAppear {
+                fetchEvents()
             }
         }
     }
-
-    // Filter events by the selected date, or show all if no date is selected
-    private var filteredEvents: [Event] {
-        if let selectedDate = selectedDate {
-            let formattedSelectedDate = formattedDate(selectedDate)
-            return events.filter { $0.date == formattedSelectedDate }
-        }
-        return events // Show all events if no date is selected
-    }
-
-    // Format the date to compare with event dates
-    private func formattedDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: date)
-    }
-
-    // Overlay to highlight days with events
-    private func highlightedDaysOverlay() -> some View {
-        GeometryReader { geometry in
-            let calendar = Calendar.current
-            let daysWithEvents = events.map { event -> Date in
-                let formatter = DateFormatter()
-                formatter.dateFormat = "yyyy-MM-dd"
-                return formatter.date(from: event.date) ?? Date()
+    private func fetchEvents() {
+        let db = Firestore.firestore()
+        db.collection("events").order(by: "date").getDocuments { snapshot, error in
+            if let error = error {
+                print("Error fetching events: \(error.localizedDescription)")
+                return
             }
 
-            return ForEach(daysWithEvents, id: \.self) { date in
-                if let dayComponent = calendar.dateComponents([.day, .month, .year], from: date).day {
-                    Text("\(dayComponent)")
-                        .font(.caption)
-                        .frame(width: 20, height: 20)
-                        .background(Color.green.opacity(0.3))
-                        .cornerRadius(10)
-                }
-            }
+            self.events = snapshot?.documents.compactMap { document in
+                let data = document.data()
+                let id = document.documentID
+                let title = data["title"] as? String ?? "Untitled Event"
+                let location = data["location"] as? String ?? "Unknown Location"
+                let description = data["description"] as? String ?? "No description provided"
+                let createdBy = data["createdBy"] as? String ?? "Unknown Creator"
+                let town = data["town"] as? String ?? "Unknown Town"
+
+                // ✅ FIX: Convert Timestamp to Date safely
+                            let date: Date? = (data["date"] as? Timestamp)?.dateValue()
+
+                            return Event(id: id, title: title, location: location, town: town, description: description, date: date, createdBy: createdBy)
+                        } ?? []
         }
     }
 }

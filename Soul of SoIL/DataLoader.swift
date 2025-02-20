@@ -1,4 +1,6 @@
 import Foundation
+import FirebaseFirestore
+import Firebase
 
 // Struct for Community Members (People)
 struct CommunityMember: Identifiable, Codable {
@@ -12,6 +14,33 @@ struct CommunityMember: Identifiable, Codable {
     let contact: String
     let picture: String
 }
+/*
+struct User: Identifiable, Codable {
+    // The Firestore Document ID
+    @DocumentID var id: String?
+    // Basic user info
+    var firstName: String
+    var lastName: String
+    var email: String
+
+    // Directory & Role
+    var isInDirectory: Bool
+    var role: String  // "admin" or "user"
+
+    // Additional profile fields
+    var category: String?  // e.g. "Health Practices"
+    var phoneNumber: String?
+    var website: String?
+    var description: String?
+    var avatar: String?
+
+    // Offerings: array of Offer objects
+    var offerings: [Offer]
+
+    // Timestamps & more
+    var createdDate: Date?
+}
+*/
 
 // Struct for Community Projects
 struct CommunityProject: Identifiable, Codable {
@@ -36,12 +65,13 @@ struct Offer: Identifiable, Codable {
 
 // Struct for Events
 struct Event: Identifiable, Codable {
-    let id: String
-    let title: String
-    let date: String // Assuming "yyyy-MM-dd"
-    let time: String
-    let location: String
-    let description: String
+    @DocumentID var id: String?
+    var title: String
+    var location: String
+    var town: String
+    var description: String
+    var date: Date?
+    var createdBy: String
 }
 
 // Struct for Offerings
@@ -72,6 +102,8 @@ struct Comment: Identifiable, Codable {
 }
 
 class DataLoader {
+    private let db = Firestore.firestore()
+    
     // Load People JSON Data
     func loadPeopleData(completion: @escaping ([CommunityMember]?) -> Void) {
         guard let url = URL(string: "https://raw.githubusercontent.com/Danimon1990/SoulnSoIL/main/Soul%20of%20SoIL/people.json") else {
@@ -138,34 +170,41 @@ class DataLoader {
 
     // Load Events JSON Data
     func loadEventsData(completion: @escaping ([Event]?) -> Void) {
-        guard let url = URL(string: "https://raw.githubusercontent.com/Danimon1990/SoulnSoIL/main/Soul%20of%20SoIL/events.json") else {
-            fatalError("Invalid URL for events.json")
-        }
-
-        URLSession.shared.dataTask(with: url) { data, _, error in
+        db.collection("events").getDocuments { (querySnapshot, error) in
             if let error = error {
-                print("Failed to fetch events.json: \(error)")
+                print("Error fetching events: \(error.localizedDescription)")
                 completion(nil)
                 return
             }
 
-            guard let data = data else {
-                print("No data returned for events.json")
+            guard let documents = querySnapshot?.documents else {
+                print("No events found.")
                 completion(nil)
                 return
             }
 
-            let decoder = JSONDecoder()
-            do {
-                let events = try decoder.decode([Event].self, from: data)
-                DispatchQueue.main.async {
-                    completion(events)
-                }
-            } catch {
-                print("Failed to decode events.json: \(error)")
-                completion(nil)
+            var events: [Event] = []
+
+            for document in documents {
+                let data = document.data()
+
+                let id = document.documentID
+                let title = data["title"] as? String ?? "Untitled Event"
+                let location = data["location"] as? String ?? "Unknown Location"
+                let description = data["description"] as? String ?? "No description provided"
+                let createdBy = data["createdBy"] as? String ?? "Unknown User"
+                let town = data["town"] as? String ?? "Unknown Town"
+
+                // ✅ Convert Firestore Timestamp to Date
+                let timestamp = data["date"] as? Timestamp
+                let date = timestamp?.dateValue()  // ✅ This converts FIRTimestamp to Date
+
+                let event = Event(id: id, title: title, location: location, town: town, description: description, date: date, createdBy: createdBy)
+                events.append(event)
             }
-        }.resume()
+
+            completion(events)
+        }
     }
 
     // Load Offerings from People and Projects

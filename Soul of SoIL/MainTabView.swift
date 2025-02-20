@@ -32,7 +32,7 @@ struct MainTabView: View {
         }
         .toolbar {
             // Log-out button in the top-right corner
-            ToolbarItem(placement: .navigationBarTrailing) {
+            ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: {
                     isAuthenticated = false // Log the user out
                 }) {

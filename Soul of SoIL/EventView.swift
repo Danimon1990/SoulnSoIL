@@ -1,14 +1,19 @@
-//
-//  EventView.swift
-//  Soul of SoIL
-//
-//  Created by Daniel Moreno on 12/12/24.
-//
-
 import SwiftUI
+import FirebaseAuth
+import FirebaseFirestore
 
 struct EventView: View {
     let event: Event
+    @State private var isEditing = false
+    @State private var showDeleteAlert = false
+    @Environment(\.presentationMode) var presentationMode
+
+    private var timeFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        formatter.dateStyle = .none
+        return formatter
+    }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
@@ -18,13 +23,23 @@ struct EventView: View {
 
             HStack {
                 Image(systemName: "calendar")
-                Text(event.date)
+                if let eventDate = event.date {
+                    Text(formatDate(eventDate))
+                } else {
+                    Text("Date not available")
+                        .foregroundColor(.red)
+                }
             }
             .font(.headline)
 
             HStack {
                 Image(systemName: "clock")
-                Text(event.time)
+                if let eventDate = event.date {
+                    Text(timeFormatter.string(from: eventDate)) // ✅ Extracts only time
+                } else {
+                    Text("Time not available")
+                        .foregroundColor(.red)
+                }
             }
             .font(.headline)
 
@@ -33,10 +48,26 @@ struct EventView: View {
                 Text(event.location)
             }
             .font(.headline)
+            HStack { // ✅ Add town display
+                Image(systemName: "building.2.crop.circle")
+                Text(event.town)
+            }
+            .font(.headline)
 
             Text(event.description)
                 .font(.body)
                 .padding(.top, 10)
+
+            Divider() // ✅ Add a line before the "Created by" section
+
+            // ✅ Add the event creator at the bottom
+            HStack {
+                Image(systemName: "person.crop.circle")
+                Text("Created by: \(event.createdBy)")
+                    .font(.footnote)
+                    .foregroundColor(.blue)
+            }
+            .padding(.top, 5)
 
             Spacer()
         }
@@ -44,15 +75,55 @@ struct EventView: View {
         .navigationTitle("Event Details")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .navigationBarTrailing) {
-                ShareLink(
-                    item: "Check out this event: \(event.title) on \(event.date) at \(event.time). Location: \(event.location). Description: \(event.description)"
-                        ) {
-                    Image(systemName: "square.and.arrow.up")
-                                .font(.title2)
-                                .foregroundColor(.blue)
+            // ✅ Show Edit Button ONLY if the logged-in user is the creator
+            if Auth.auth().currentUser?.email == event.createdBy {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Menu {
+                        Button(action: { isEditing.toggle() }) {
+                            Label("Edit Event", systemImage: "pencil")
                         }
+                        Button(role: .destructive, action: { showDeleteAlert.toggle() }) {
+                            Label("Delete Event", systemImage: "trash")
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                            .font(.title2)
                     }
                 }
             }
         }
+        .sheet(isPresented: $isEditing) {
+            EditEventView(event: event) // ✅ Show Edit View
+        }
+        .alert("Delete Event", isPresented: $showDeleteAlert) {
+            Button("Cancel", role: .cancel) { }
+            Button("Delete", role: .destructive) {
+                deleteEvent()
+            }
+        } message: {
+            Text("Are you sure you want to delete this event?")
+        }
+    }
+
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter.string(from: date)
+    }
+
+    // **🚀 Function to Delete the Event**
+    private func deleteEvent() {
+        let db = Firestore.firestore()
+        db.collection("events").document(event.id ?? "").delete { error in
+            if let error = error {
+                print("Error deleting event: \(error.localizedDescription)")
+            } else {
+                print("Event deleted successfully!")
+                DispatchQueue.main.async {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
+        }
+    }
+}

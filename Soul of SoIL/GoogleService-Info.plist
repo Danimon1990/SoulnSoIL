@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>309712860278-g5pdd90h9t3csgcv7lgce0dr84fspscq.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.309712860278-g5pdd90h9t3csgcv7lgce0dr84fspscq</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBB9a2dDVl_Bi6_xH4LkUzvxfT10QK3f8Q</string>
+	<key>GCM_SENDER_ID</key>
+	<string>309712860278</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>danimore.com.Soul-of-SoIL</string>
+	<key>PROJECT_ID</key>
+	<string>soul-of-soil</string>
+	<key>STORAGE_BUCKET</key>
+	<string>soul-of-soil.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:309712860278:ios:24835c08b09c35380adb57</string>
+</dict>
+</plist>

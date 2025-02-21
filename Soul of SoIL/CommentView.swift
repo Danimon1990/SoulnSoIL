@@ -1,46 +1,47 @@
-//
-//  CommentView.swift
-//  Soul of SoIL
-//
-//  Created by Daniel Moreno on 12/17/24.
-//
 import SwiftUI
-
+import FirebaseFirestore
+import FirebaseAuth
 struct CommentView: View {
     @State private var newComment = ""
     let post: Post
-    @ObservedObject var viewModel: CommunityBoardViewModel
+
+    // ✅ Now referencing the correct PostViewModel
+    @ObservedObject var viewModel: PostViewModel
 
     var body: some View {
         VStack(spacing: 20) {
             Text("Reply to \(post.title)")
                 .font(.title2)
                 .fontWeight(.bold)
-                .multilineTextAlignment(.center)
 
             TextField("Enter your comment...", text: $newComment)
                 .textFieldStyle(RoundedBorderTextFieldStyle())
                 .padding()
 
-            Button("Submit") {
+            Button(action: {
+                guard let user = Auth.auth().currentUser else { return }
+
                 let comment = Comment(
                     id: UUID().uuidString,
-                    author: "Current User", // Replace with real user data
+                    postID: post.id ?? "",
                     content: newComment,
-                    timestamp: Date()
+                    timestamp: Date(),
+                    authorID: user.uid,
+                    authorName: user.displayName ?? "Anonymous"
                 )
-                viewModel.addComment(toPostId: post.id,
-                                     author: comment.author,
-                                     content: comment.content)
-                newComment = ""
-            }
-            .font(.headline)
-            .foregroundColor(.white)
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(Color.green)
-            .cornerRadius(8)
 
+                // ✅ This function is in PostViewModel, not CommunityBoardViewModel
+                viewModel.addComment(comment, to: post)
+                newComment = ""
+            }) {
+                Text("Submit")
+                    .font(.headline)
+                    .foregroundColor(.white)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.green)
+                    .cornerRadius(8)
+            }
             Spacer()
         }
         .padding()

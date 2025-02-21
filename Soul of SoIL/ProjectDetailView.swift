@@ -1,11 +1,3 @@
-//
-//  Untitled.swift
-//  Soul of SoIL
-//
-//  Created by Daniel Moreno on 10/17/24.
-//
-
-
 import SwiftUI
 
 struct ProjectDetailView: View {
@@ -19,25 +11,31 @@ struct ProjectDetailView: View {
                 .padding(.top)
             
             // Location
-            Text("Location: \(project.location)")
-                .font(.title2)
+            if let location = project.location, !location.isEmpty {
+                Text("Location: \(location)")
+                    .font(.title2)
+            }
             
             // Category
-            Text("Category: \(project.category)")
-                .font(.headline)
+            if let category = project.category, !category.isEmpty {
+                Text("Category: \(category)")
+                    .font(.headline)
+            }
             
             // Description
-            Text("Description: \(project.description)")
-                .font(.body)
+            Text("Description:")
+                .font(.headline)
                 .padding(.top)
+            Text(project.description)
+                .font(.body)
             
-            // Offers
-            if let offers = project.offers, !offers.isEmpty {
+            // Offers Section
+            if !project.offers.isEmpty {
                 Text("Offers:")
                     .font(.headline)
                     .padding(.top)
                 
-                ForEach(offers, id: \.id) { offer in
+                ForEach(project.offers, id: \.id) { offer in
                     VStack(alignment: .leading, spacing: 5) {
                         Text("• \(offer.title)")
                             .font(.body)
@@ -53,36 +51,34 @@ struct ProjectDetailView: View {
                     .foregroundColor(.gray)
             }
             
-            // Contact
-            Text("Contact: \(project.contact)")
-                .font(.footnote)
-                .foregroundColor(.blue)
-                .padding(.top)
-            
+            // Contact Section
+            VStack(alignment: .leading) {
+                Text("Contact:")
+                    .font(.headline)
+                    .padding(.top, 5)
+                
+                if let phoneNumber = project.phoneNumber, !phoneNumber.isEmpty {
+                    Text("Phone: \(phoneNumber)")
+                        .font(.footnote)
+                        .foregroundColor(.blue)
+                }
+                
+                if let email = project.email, !email.isEmpty {
+                    Text("Email: \(email)")
+                        .font(.footnote)
+                        .foregroundColor(.blue)
+                }
+                
+                if let website = project.website, !website.isEmpty {
+                    Text("Website: \(website)")
+                        .font(.footnote)
+                        .foregroundColor(.blue)
+                }
+            }
+
             Spacer()
         }
         .padding()
         .navigationTitle(project.name)
-    }
-}
-
-struct ProjectDetailView_Previews: PreviewProvider {
-    static var previews: some View {
-        ProjectDetailView(
-            project: CommunityProject(
-                id: "1",
-                name: "Green Acres Farm",
-                location: "123 Green Road",
-                category: "Farm",
-                description: "Organic produce and community-supported agriculture.",
-                offers: [
-                    Offer(id: "1", title: "Fresh Vegetables", type: "Product", description: "Organically grown vegetables available every week."),
-                    Offer(id: "2", title: "Farm Tours", type: "Service", description: "Experience our farm and learn about sustainable agriculture.")
-                ],
-                contact: "info@greenacres.com",
-                tags: ["organic", "farm"],
-                picture: "green_acres_farm.jpg"
-            )
-        )
     }
 }

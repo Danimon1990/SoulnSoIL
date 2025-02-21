@@ -1,70 +1,71 @@
-//
-//  PostView.swift
-//  Soul of SoIL
-//
-//  Created by Daniel Moreno on 12/12/24.
-//
 import SwiftUI
+
 struct PostView: View {
-    let post: Post
-    @ObservedObject var viewModel: CommunityBoardViewModel
-    @State private var commentContent = ""
-    @Binding var username: String // Binding<String> for username
+    var post: Post
+    @Environment(\.presentationMode) var presentationMode
+    @StateObject private var viewModel = PostViewModel()
+    @State private var newComment = ""
+    @Binding var username: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            // Main Post Details
+        VStack(alignment: .leading, spacing: 16) {
             Text(post.title)
                 .font(.largeTitle)
-                .fontWeight(.bold)
-
+                .bold()
+            
+            Text("By \(formattedAuthorName(post.authorName)) • \(formattedDate(post.timestamp))")
+                .font(.footnote)
+                .foregroundColor(.gray)
+            
             Text(post.content)
                 .font(.body)
 
-            Text("By \(post.author) • \(formattedDate(post.timestamp))")
-                .font(.footnote)
-                .foregroundColor(.gray)
-
             Divider()
-
-            // Comments Section
-            Text("Replies")
+            
+            // Comment Section
+            Text("Comments")
                 .font(.headline)
-                .padding(.top)
-
-            ForEach(post.comments) { comment in
+            
+            List(viewModel.comments) { comment in
                 VStack(alignment: .leading) {
-                    Text("\(comment.author):")
-                        .fontWeight(.bold)
-                        .foregroundColor(.blue)
                     Text(comment.content)
+                    Text("- \(comment.authorName)")
+                        .font(.footnote)
+                        .foregroundColor(.gray)
                 }
-                .padding(.vertical, 5)
             }
-
-            // Add Reply Section
+            
+            // Add New Comment
             HStack {
-                TextField("Write a reply...", text: $commentContent)
+                TextField("Write a comment...", text: $newComment)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-
+                
                 Button(action: {
-                    guard !commentContent.isEmpty else { return }
-                    viewModel.addComment(toPostId: post.id, author: username, content: commentContent)
-                    commentContent = ""
+                    if !newComment.isEmpty {
+                        let comment = Comment(
+                            postID: post.id ?? "",
+                            content: newComment,
+                            timestamp: Date(),
+                            authorID: "userID", // Get from Auth
+                            authorName: username
+                        )
+                        viewModel.addComment(comment, to: post)
+                        newComment = ""
+
+                        // ✅ Dismiss the view after posting a comment
+                        presentationMode.wrappedValue.dismiss()
+                    }
                 }) {
-                    Text("Reply")
-                        .padding(8)
-                        .background(Color.green)
-                        .foregroundColor(.white)
-                        .cornerRadius(8)
+                    Image(systemName: "paperplane.fill")
+                        .font(.title2)
                 }
             }
-
-            Spacer()
+            .padding()
         }
         .padding()
-        .navigationTitle(post.title)
-        .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            viewModel.fetchComments(for: post.id ?? "")
+        }
     }
 
     private func formattedDate(_ date: Date) -> String {
@@ -72,5 +73,13 @@ struct PostView: View {
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
         return formatter.string(from: date)
+    }
+    private func formattedAuthorName(_ author: String) -> String {
+        // If email is stored instead of a name, format it better
+        if author.contains("@") {
+            let namePart = author.components(separatedBy: "@").first ?? "Unknown"
+            return namePart.capitalized // Display only the name part of the email
+        }
+        return author // Otherwise, display the name as is
     }
 }

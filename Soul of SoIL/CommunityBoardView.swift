@@ -4,9 +4,7 @@ struct CommunityBoardView: View {
     @StateObject private var viewModel = CommunityBoardViewModel()
     @State private var isPresentingNewPostView = false
     @State private var searchText = ""
-    @State private var selectedPost: Post? // To track the selected post
-    @State private var isPresentingCommentView = false // Show CommentView
-    @Binding var username: String // Use Binding<String> here
+    @Binding var username: String // Use Binding<String> for user name
 
     var body: some View {
         NavigationView {
@@ -24,14 +22,14 @@ struct CommunityBoardView: View {
                 } else {
                     // List of Posts
                     List(filteredPosts) { post in
-                        NavigationLink(destination: PostView(post: post, viewModel: viewModel, username: $username)) {
+                        NavigationLink(destination: PostView(post: post, username: $username)) {
                             VStack(alignment: .leading, spacing: 8) {
                                 Text(post.title)
                                     .font(.headline)
                                 Text(post.content)
                                     .lineLimit(2)
                                     .font(.body)
-                                Text("By \(post.author) • \(formattedDate(post.timestamp))")
+                                Text("By \(post.authorName) • \(formattedDate(post.timestamp))")
                                     .font(.footnote)
                                     .foregroundColor(.gray)
                             }
@@ -55,6 +53,10 @@ struct CommunityBoardView: View {
             .sheet(isPresented: $isPresentingNewPostView) {
                 NewPostView(viewModel: viewModel, username: $username)
             }
+            .onAppear {
+                print("📡 Fetching posts on CommunityBoardView load...") // Debugging log
+                viewModel.fetchPosts() // ✅ Fetch posts when the view appears
+            }
         }
     }
 
@@ -65,7 +67,7 @@ struct CommunityBoardView: View {
             return viewModel.posts.filter { post in
                 post.title.localizedCaseInsensitiveContains(searchText) ||
                 post.content.localizedCaseInsensitiveContains(searchText) ||
-                post.author.localizedCaseInsensitiveContains(searchText)
+                post.authorName.localizedCaseInsensitiveContains(searchText)
             }
         }
     }

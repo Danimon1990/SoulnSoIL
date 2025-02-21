@@ -7,6 +7,7 @@ struct EventView: View {
     @State private var isEditing = false
     @State private var showDeleteAlert = false
     @Environment(\.presentationMode) var presentationMode
+    @State private var creatorFullName: String = "Loading..."
 
     private var timeFormatter: DateFormatter {
         let formatter = DateFormatter()
@@ -62,11 +63,11 @@ struct EventView: View {
 
             // ✅ Add the event creator at the bottom
             HStack {
-                Image(systemName: "person.crop.circle")
-                Text("Created by: \(event.createdBy)")
-                    .font(.footnote)
-                    .foregroundColor(.blue)
-            }
+                            Image(systemName: "person.crop.circle")
+                            Text("Created by: \(creatorFullName)")
+                                .font(.footnote)
+                                .foregroundColor(.blue)
+                        }
             .padding(.top, 5)
 
             Spacer()
@@ -75,7 +76,7 @@ struct EventView: View {
         .navigationTitle("Event Details")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            // ✅ Show Edit Button ONLY if the logged-in user is the creator
+            //  Show Edit Button ONLY if the logged-in user is the creator
             if Auth.auth().currentUser?.email == event.createdBy {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Menu {
@@ -103,6 +104,9 @@ struct EventView: View {
         } message: {
             Text("Are you sure you want to delete this event?")
         }
+        .onAppear {
+                    fetchCreatorName()
+                }
     }
 
     private func formatDate(_ date: Date) -> String {
@@ -111,6 +115,27 @@ struct EventView: View {
         formatter.timeStyle = .none
         return formatter.string(from: date)
     }
+    private func fetchCreatorName() {
+            let db = Firestore.firestore()
+            db.collection("users").whereField("email", isEqualTo: event.createdBy).getDocuments { snapshot, error in
+                if let error = error {
+                    print("Error fetching user data: \(error.localizedDescription)")
+                    return
+                }
+
+                if let document = snapshot?.documents.first {
+                    let firstName = document.data()["firstName"] as? String ?? ""
+                    let lastName = document.data()["lastName"] as? String ?? ""
+                    DispatchQueue.main.async {
+                        self.creatorFullName = "\(firstName) \(lastName)".trimmingCharacters(in: .whitespaces)
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.creatorFullName = "Unknown User"
+                    }
+                }
+            }
+        }
 
     // **🚀 Function to Delete the Event**
     private func deleteEvent() {

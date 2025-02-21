@@ -2,6 +2,7 @@ import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
 
+
 struct SignUpView: View {
     @Environment(\.presentationMode) var presentationMode
     @Binding var signUpSuccessMessage: String
@@ -10,8 +11,7 @@ struct SignUpView: View {
     @State private var lastName: String = ""
     @State private var email: String = ""
     @State private var password: String = ""
-    @State private var age: String = ""
-    @State private var introduction: String = ""
+    @State private var bio: String = ""
     @State private var isSigningUp: Bool = false
     @State private var errorMessage: String = ""
 
@@ -21,8 +21,6 @@ struct SignUpView: View {
                 Section(header: Text("Personal Info")) {
                     TextField("First Name", text: $firstName)
                     TextField("Last Name", text: $lastName)
-                    TextField("Age", text: $age)
-                        .keyboardType(.numberPad)
                 }
 
                 Section(header: Text("Account Info")) {
@@ -33,8 +31,8 @@ struct SignUpView: View {
                     SecureField("Password", text: $password)
                 }
 
-                Section(header: Text("Introduction")) {
-                    TextEditor(text: $introduction)
+                Section(header: Text("Bio")) {
+                    TextEditor(text: $bio)
                         .frame(height: 80)
                         .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color.gray, lineWidth: 1))
                 }
@@ -85,11 +83,18 @@ struct SignUpView: View {
             // **🚀 Save User Profile to Firestore**
             let db = Firestore.firestore()
             let userData: [String: Any] = [
-                "firstName": firstName,
-                "lastName": lastName,
-                "email": email,
-                "age": Int(age) ?? 0,
-                "introduction": introduction
+              "firstName": firstName,
+              "lastName": lastName,
+              "email": email,
+              "role": "user",
+              "isInDirectory": false,
+              "offerings": [],
+              "phoneNumber": "",
+              "website": "",
+              "description": "",
+              "avatar": "",
+              "location": "",
+              "createdDate": FieldValue.serverTimestamp() // or Date()
             ]
 
             db.collection("users").document(user.uid).setData(userData) { error in

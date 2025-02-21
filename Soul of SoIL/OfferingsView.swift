@@ -1,35 +1,69 @@
 import SwiftUI
+import Foundation
 
 struct OfferingsView: View {
-    @State private var offerings: [Offering] = []
-    @State private var filteredOfferings: [Offering] = []
+    @State private var offers: [Offer] = []
+    @State private var filteredOffers: [Offer] = []
     @State private var searchText: String = ""
+    @State private var selectedSortOption: SortOption = .alphabetical
+
     private let dataLoader = DataLoader()
+
+    enum SortOption: String, CaseIterable {
+        case alphabetical = "A-Z"
+        case category = "Category"
+        case location = "Location"
+    }
 
     var body: some View {
         NavigationView {
             VStack {
                 // Search Bar
-                TextField("Search offerings...", text: $searchText)
+                TextField("Search offers...", text: $searchText)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding()
                     .onChange(of: searchText) {
-                        filterOfferings()
+                        filterOffers()
                     }
-                // Offerings List
-                List(filteredOfferings) { offering in
+
+                // Sorting Picker
+                Picker("Sort by", selection: $selectedSortOption) {
+                    ForEach(SortOption.allCases, id: \.self) { option in
+                        Text(option.rawValue)
+                    }
+                }
+                .pickerStyle(SegmentedPickerStyle())
+                .padding(.horizontal)
+                .onChange(of: selectedSortOption) {
+                    sortOffers()
+                }
+
+                // Offers List
+                List(filteredOffers, id: \.id) { offer in
                     VStack(alignment: .leading, spacing: 10) {
-                        Text(offering.title)
+                        Text(offer.title)
                             .font(.headline)
 
-                        Text("Source: \(offering.sourceName) (\(offering.sourceType))")
+                        Text("Type: \(offer.type)")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
 
-                        Text(offering.sourceDescription)
+                        if !offer.type.isEmpty {
+                            Text("Category: \(offer.type)")
+                                .font(.footnote)
+                                .foregroundColor(.gray)
+                        }
+
+                        if let location = offer.contact, !location.isEmpty {
+                            Text("Location: \(location)")
+                                .font(.footnote)
+                                .foregroundColor(.gray)
+                        }
+
+                        Text(offer.description)
                             .font(.body)
 
-                        if let contact = offering.contact {
+                        if let contact = offer.contact, !contact.isEmpty {
                             Text("Contact: \(contact)")
                                 .font(.footnote)
                                 .foregroundColor(.blue)
@@ -39,35 +73,59 @@ struct OfferingsView: View {
                 }
                 .listStyle(PlainListStyle())
             }
-            .navigationTitle("Offerings")
+            .navigationTitle("Offers")
         }
         .onAppear {
-            loadOfferings()
+            loadOffers()
         }
     }
 
-    private func loadOfferings() {
+    // MARK: - Load Offers from Firebase
+    private func loadOffers() {
         dataLoader.loadPeopleData { people in
-            guard let people = people else { return }
+            guard let people = people else {
+                print("⚠️ No people data found!")
+                return
+            }
             self.dataLoader.loadProjectsData { projects in
-                guard let projects = projects else { return }
-                self.dataLoader.loadOfferings(people: people, projects: projects) { loadedOfferings in
-                    self.offerings = loadedOfferings
-                    self.filteredOfferings = loadedOfferings // Initialize filtered list
+                guard let projects = projects else {
+                    print("⚠️ No projects data found!")
+                    return
+                }
+                self.dataLoader.loadOfferings(people: people, projects: projects) { offers in
+                    print("✅ Offers Loaded: \(offers.count)")
+                    offers.forEach { print("Offer: \($0.title), Type: \($0.type), Contact: \($0.contact ?? "N/A")") }
+                    
+                    self.offers = offers
+                    self.filteredOffers = offers // Initialize filtered list
+                    sortOffers() // Sort initially
                 }
             }
         }
     }
 
-    private func filterOfferings() {
+    // MARK: - Filter Offers by Search
+    private func filterOffers() {
         if searchText.isEmpty {
-            filteredOfferings = offerings
+            filteredOffers = offers
         } else {
-            filteredOfferings = offerings.filter { offering in
-                offering.title.localizedCaseInsensitiveContains(searchText) ||
-                offering.sourceName.localizedCaseInsensitiveContains(searchText) ||
-                offering.sourceType.localizedCaseInsensitiveContains(searchText)
+            filteredOffers = offers.filter { offer in
+                offer.title.localizedCaseInsensitiveContains(searchText) ||
+                offer.type.localizedCaseInsensitiveContains(searchText) ||
+                (offer.contact ?? "").localizedCaseInsensitiveContains(searchText)
             }
+        }
+    }
+
+    // MARK: - Sort Offers
+    private func sortOffers() {
+        switch selectedSortOption {
+        case .alphabetical:
+            filteredOffers.sort { $0.title < $1.title }
+        case .category:
+            filteredOffers.sort { $0.type < $1.type }
+        case .location:
+            filteredOffers.sort { ($0.contact ?? "") < ($1.contact ?? "") }
         }
     }
 }

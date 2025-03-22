@@ -19,4 +19,4 @@ To get started with the app on iOS, you can clone this repository and follow the
 ### Prerequisites
 
 - **Xcode**: You need Xcode installed to run the app on iOS devices or simulators. Download Xcode from the [Mac App Store](https://apps.apple.com/us/app/xcode/id497799835).
-- **Git**: Make sure you have Git installed on your machine to clone the repository. You can download it
+- **Git**: Make sure you have Git installed on your machine to clone the repository. You can download it. More information in https://humannaturetech.com/soul-n-soil/

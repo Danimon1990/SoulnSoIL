@@ -26,6 +26,7 @@ struct ProfileView: View {
     
     @State private var isEditing = false
     @State private var isLoading: Bool = true
+    @Binding var isAuthenticated: Bool
     
     // Predefined categories (Optional)
     let categoryOptions = ["Health Practices", "Farming", "Art", "Healing", "ecology", "Social work", "Sustainable Business", "other"]
@@ -127,6 +128,14 @@ struct ProfileView: View {
                                         get: { offerings[index].contact ?? "" },
                                         set: { offerings[index].contact = $0 }
                                     ))
+                                    
+                                    // Delete Button
+                                    Button(action: {
+                                        deleteOffer(at: index)
+                                    }) {
+                                        Label("Delete", systemImage: "trash")
+                                            .foregroundColor(.red)
+                                    }
                                 } else {
                                     Text("📌 \(offerings[index].title) - \(offerings[index].type)")
                                         .font(.headline)
@@ -175,9 +184,13 @@ struct ProfileView: View {
                 }
                 
                 // Logout Button
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Logout") {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: {
                         try? Auth.auth().signOut()
+                        isAuthenticated = false
+                    }) {
+                        Image(systemName: "rectangle.portrait.and.arrow.right")
+                            .foregroundColor(.red)
                     }
                 }
             }
@@ -213,6 +226,32 @@ struct ProfileView: View {
                         )
                     }
                 }
+            }
+        }
+    }
+    
+    private func deleteOffer(at index: Int) {
+        guard index < offerings.count, let uid = Auth.auth().currentUser?.uid else { return }
+
+        // Remove offer from the local list
+        offerings.remove(at: index)
+
+        // Update Firebase
+        let updatedData: [String: Any] = [
+            "offerings": offerings.map { [
+                "id": $0.id,
+                "title": $0.title,
+                "type": $0.type,
+                "description": $0.description,
+                "contact": $0.contact
+            ]}
+        ]
+
+        db.collection("users").document(uid).updateData(updatedData) { error in
+            if let error = error {
+                print("Error deleting offer: \(error.localizedDescription)")
+            } else {
+                print("Offer deleted successfully!")
             }
         }
     }

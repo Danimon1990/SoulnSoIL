@@ -11,7 +11,7 @@ struct ProjectsDirectoryView: View {
     var body: some View {
         NavigationView {
             VStack {
-                // Show "Create New Project" button only for admins
+                // Show "Create New Program" button only for admins
                 if isAdmin {
                     Button(action: {
                         showAddProjectView = true
@@ -19,7 +19,7 @@ struct ProjectsDirectoryView: View {
                         HStack {
                             Image(systemName: "plus.circle.fill")
                                 .foregroundColor(.white)
-                            Text("Create New Project")
+                            Text("Create New Program")
                                 .fontWeight(.bold)
                         }
                         .frame(maxWidth: .infinity)
@@ -46,7 +46,7 @@ struct ProjectsDirectoryView: View {
                         }
                     }
                 }
-                .navigationTitle("Projects Directory")
+            
                 .onAppear {
                     checkAdminStatus()
                     loadProjects()

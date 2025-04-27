@@ -14,7 +14,7 @@ struct AddEventView: View {
     @State private var title: String = ""
     @State private var date: Date = Date()
     @State private var location: String = ""
-    @State private var town: String = "" // ✅ Added town input
+    @State private var town: String = ""
     @State private var description: String = ""
     @State private var isSaving = false
 
@@ -25,7 +25,7 @@ struct AddEventView: View {
                     TextField("Title", text: $title)
                     DatePicker("Date", selection: $date, displayedComponents: [.date, .hourAndMinute])
                     TextField("Location", text: $location)
-                    TextField("Town", text: $town) // ✅ New field for town
+                    TextField("Town", text: $town)
                     TextField("Description", text: $description)
                 }
 
@@ -37,8 +37,12 @@ struct AddEventView: View {
                         }
                         
                         isSaving = true
-                        saveEvent(title: title, location: location, town: town, description: description, date: date, createdBy: user.email ?? "Unknown Email")
-                        presentationMode.wrappedValue.dismiss()
+                        saveEvent(title: title, location: location, town: town, description: description, date: date, createdBy: user.email ?? "Unknown Email") { success in
+                            isSaving = false
+                            if success {
+                                presentationMode.wrappedValue.dismiss()
+                            }
+                        }
                     }) {
                         HStack {
                             if isSaving {
@@ -66,8 +70,7 @@ struct AddEventView: View {
         }
     }
 
-    // **🚀 Function to Save Event to Firestore**
-    func saveEvent(title: String, location: String, town: String, description: String, date: Date, createdBy: String) {
+    func saveEvent(title: String, location: String, town: String, description: String, date: Date, createdBy: String, completion: @escaping (Bool) -> Void) {
         let db = Firestore.firestore()
 
         guard let user = Auth.auth().currentUser else {
@@ -75,20 +78,23 @@ struct AddEventView: View {
             return
         }
 
-        let newEvent = [
+        let newEvent: [String: Any] = [
             "title": title,
             "location": location,
-            "town": town, // ✅ Added town
+            "town": town,
             "description": description,
             "date": Timestamp(date: date),
-            "createdBy": user.email ?? "Unknown Email"
-        ] as [String : Any]
+            "createdBy": user.email ?? "Unknown Email",
+            "ownerId": user.uid
+        ]
 
         db.collection("events").addDocument(data: newEvent) { error in
             if let error = error {
                 print("Error adding event: \(error.localizedDescription)")
+                completion(false)
             } else {
                 print("Event added successfully!")
+                completion(true)
             }
         }
     }

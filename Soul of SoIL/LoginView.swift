@@ -19,6 +19,7 @@ struct LoginView: View {
                     .multilineTextAlignment(.center)
                     .padding()
             }
+            
 
             // **Logo at the top**
             Image("Icon-App-76x76")
@@ -90,6 +91,7 @@ struct LoginView: View {
         }
         .padding()
     }
+    
 
     private func login() {
         Auth.auth().signIn(withEmail: username, password: password) { result, error in

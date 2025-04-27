@@ -30,19 +30,7 @@ struct MainTabView: View {
                     Label("Offerings", systemImage: "hand.raised")
                 }
         }
-        .toolbar {
-            // Log-out button in the top-right corner
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: {
-                    isAuthenticated = false // Log the user out
-                }) {
-                    Image(systemName: "rectangle.portrait.and.arrow.right") // Log-out icon
-                        .foregroundColor(.red)
-                }
-                .buttonStyle(BorderlessButtonStyle())
-            }
-        }
         .navigationBarBackButtonHidden(true) // Hide the back button
     }
+    
 }
-

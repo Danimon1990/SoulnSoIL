@@ -29,30 +29,54 @@ struct NewProjectView: View {
     var body: some View {
         NavigationView {
             Form {
-                Section(header: Text("Project Details")) {
-                    TextField("Project Name", text: $name)
-                    TextField("Email", text: $email)
-                    TextEditor(text: $description).frame(height: 80)
+                Section(header: Text("Program Details")) {
+                    TextField("Program Name", text: $name)
+                        .textContentType(.name)
+                    
+                    TextField("Contact Email", text: $email)
+                        .textContentType(.emailAddress)
+                        .keyboardType(.emailAddress)
+                    
+                    VStack(alignment: .leading) {
+                        Text("Description")
+                            .font(.caption)
+                            .foregroundColor(.gray)
+                        TextEditor(text: $description)
+                            .frame(height: 80)
+                    }
+                    
                     TextField("Phone Number", text: $phoneNumber)
-                    TextField("Website", text: $website)
-                    TextField("Avatar URL", text: $avatarURL)
-                    TextField("Location", text: $location)
-                    TextField("Category", text: $category)
+                        .textContentType(.telephoneNumber)
+                        .keyboardType(.phonePad)
+                    
+                    TextField("Website URL", text: $website)
+                        .textContentType(.URL)
+                        .keyboardType(.URL)
+                    
+                    TextField("Location (City, State)", text: $location)
+                        .textContentType(.addressCityAndState)
+                    
+                    TextField("Category (e.g., Business, Community Initiative, Creative Development)", text: $category)
                 }
                 
                 // Offerings Section
-                Section(header: Text("Offerings")) {
+                Section(header: Text("Program Offerings")) {
                     ForEach(offerings.indices, id: \.self) { index in
                         VStack(alignment: .leading) {
-                            TextField("Title", text: $offerings[index].title)
-                            TextField("Type", text: $offerings[index].type)
-                            TextEditor(text: $offerings[index].description)
-                                .frame(height: 40)
+                            TextField("Offering Title", text: $offerings[index].title)
+                            TextField("Type of Offering", text: $offerings[index].type)
+                            VStack(alignment: .leading) {
+                                Text("Description")
+                                    .font(.caption)
+                                    .foregroundColor(.gray)
+                                TextEditor(text: $offerings[index].description)
+                                    .frame(height: 40)
+                            }
                         }
                     }
                     
                     Button(action: addOffer) {
-                        Label("Add New Offer", systemImage: "plus")
+                        Label("Add New Offering", systemImage: "plus")
                     }
                 }
                 
@@ -61,7 +85,7 @@ struct NewProjectView: View {
                     Button(action: saveProject) {
                         HStack {
                             Spacer()
-                            Text("Save Project")
+                            Text("Save Program")
                                 .foregroundColor(.white)
                                 .padding()
                                 .background(Color.blue)
@@ -72,7 +96,7 @@ struct NewProjectView: View {
                     .disabled(name.isEmpty || email.isEmpty)
                 }
             }
-            .navigationTitle("New Project")
+            .navigationTitle("New Program")
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button("Cancel") {

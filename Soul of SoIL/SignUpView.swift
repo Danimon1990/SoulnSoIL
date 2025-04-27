@@ -2,7 +2,6 @@ import SwiftUI
 import FirebaseAuth
 import FirebaseFirestore
 
-
 struct SignUpView: View {
     @Environment(\.presentationMode) var presentationMode
     @Binding var signUpSuccessMessage: String
@@ -13,6 +12,7 @@ struct SignUpView: View {
     @State private var password: String = ""
     @State private var bio: String = ""
     @State private var isSigningUp: Bool = false
+    @State private var showError: Bool = false
     @State private var errorMessage: String = ""
 
     var body: some View {
@@ -26,15 +26,11 @@ struct SignUpView: View {
                 Section(header: Text("Account Info")) {
                     TextField("Email", text: $email)
                         .autocapitalization(.none)
+                        .keyboardType(.emailAddress)
                         .disableAutocorrection(true)
                     
                     SecureField("Password", text: $password)
-                }
-
-                Section(header: Text("Bio")) {
-                    TextEditor(text: $bio)
-                        .frame(height: 80)
-                        .overlay(RoundedRectangle(cornerRadius: 5).stroke(Color.gray, lineWidth: 1))
+                        .textContentType(.newPassword)
                 }
 
                 Section {
@@ -42,8 +38,9 @@ struct SignUpView: View {
                         HStack {
                             if isSigningUp {
                                 ProgressView()
+                                    .padding(.trailing, 5)
                             }
-                            Text("Sign Up")
+                            Text(isSigningUp ? "Creating Account..." : "Sign Up")
                         }
                         .frame(maxWidth: .infinity)
                         .padding()
@@ -51,7 +48,15 @@ struct SignUpView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
                     }
-                    .disabled(firstName.isEmpty || lastName.isEmpty || email.isEmpty || password.isEmpty)
+                    .disabled(isSigningUp || firstName.isEmpty || lastName.isEmpty || email.isEmpty || password.isEmpty)
+                }
+                
+                if !errorMessage.isEmpty {
+                    Section {
+                        Text(errorMessage)
+                            .foregroundColor(.red)
+                            .font(.footnote)
+                    }
                 }
             }
             .navigationTitle("Create Account")
@@ -62,48 +67,89 @@ struct SignUpView: View {
                     }
                 }
             }
-            .alert(isPresented: .constant(!errorMessage.isEmpty)) {
-                Alert(title: Text("Sign Up Failed"), message: Text(errorMessage), dismissButton: .default(Text("OK")))
+            .alert("Sign Up Failed", isPresented: $showError) {
+                Button("OK", role: .cancel) {
+                    errorMessage = ""
+                }
+            } message: {
+                Text(errorMessage)
             }
+            .disabled(isSigningUp)
         }
     }
 
     // **🔥 Sign Up Function**
     private func signUp() {
         isSigningUp = true
+        errorMessage = ""
+        
+        // Basic validation
+        guard password.count >= 6 else {
+            errorMessage = "Password must be at least 6 characters long"
+            isSigningUp = false
+            return
+        }
+        
+        guard email.contains("@") else {
+            errorMessage = "Please enter a valid email address"
+            isSigningUp = false
+            return
+        }
+        
         Auth.auth().createUser(withEmail: email, password: password) { result, error in
             if let error = error {
-                self.errorMessage = error.localizedDescription
-                self.isSigningUp = false
+                DispatchQueue.main.async {
+                    self.errorMessage = error.localizedDescription
+                    self.showError = true
+                    self.isSigningUp = false
+                }
                 return
             }
 
-            guard let user = result?.user else { return }
-
-            // **🚀 Save User Profile to Firestore**
+            guard let user = result?.user else {
+                DispatchQueue.main.async {
+                    self.errorMessage = "Failed to create user"
+                    self.showError = true
+                    self.isSigningUp = false
+                }
+                return
+            }
+        
+            // Send Email Verification
+            user.sendEmailVerification { error in
+                if let error = error {
+                    print("Error sending verification email: \(error.localizedDescription)")
+                }
+            }
+            
+            // Save User Profile to Firestore
             let db = Firestore.firestore()
             let userData: [String: Any] = [
-              "firstName": firstName,
-              "lastName": lastName,
-              "email": email,
-              "role": "user",
-              "isInDirectory": false,
-              "offerings": [],
-              "phoneNumber": "",
-              "website": "",
-              "description": "",
-              "avatar": "",
-              "location": "",
-              "createdDate": FieldValue.serverTimestamp() // or Date()
+                "firstName": firstName,
+                "lastName": lastName,
+                "email": email,
+                "role": "user",
+                "isInDirectory": false,
+                "offerings": [],
+                "phoneNumber": "",
+                "website": "",
+                "description": "",
+                "avatar": "",
+                "location": "",
+                "createdDate": FieldValue.serverTimestamp()
             ]
 
             db.collection("users").document(user.uid).setData(userData) { error in
-                self.isSigningUp = false
-                if let error = error {
-                    self.errorMessage = "Error saving user data: \(error.localizedDescription)"
-                } else {
-                    signUpSuccessMessage = "Welcome to Soul of SoIL, you just signed up. You are ready to log in."
-                    presentationMode.wrappedValue.dismiss()
+                DispatchQueue.main.async {
+                    self.isSigningUp = false
+                    
+                    if let error = error {
+                        self.errorMessage = "Error saving user data: \(error.localizedDescription)"
+                        self.showError = true
+                    } else {
+                        self.signUpSuccessMessage = "Account created successfully! Please check your email for verification."
+                        self.presentationMode.wrappedValue.dismiss()
+                    }
                 }
             }
         }

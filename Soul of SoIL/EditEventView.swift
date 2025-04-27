@@ -11,6 +11,8 @@ import FirebaseFirestore
 struct EditEventView: View {
     @State var event: Event
     @Environment(\.presentationMode) var presentationMode
+    @State private var showError = false
+    @State private var errorMessage = ""
 
     var body: some View {
         NavigationView {
@@ -18,6 +20,7 @@ struct EditEventView: View {
                 Section(header: Text("Event Details")) {
                     TextField("Title", text: $event.title)
                     TextField("Location", text: $event.location)
+                    TextField("Town", text: $event.town)
                     TextField("Description", text: $event.description)
                     DatePicker("Date", selection: Binding(
                         get: { event.date ?? Date() },
@@ -42,26 +45,26 @@ struct EditEventView: View {
                     }
                 }
             }
+            .alert("Error", isPresented: $showError) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text(errorMessage)
+            }
         }
     }
 
     // **🚀 Function to Update Event in Firestore**
     private func updateEvent() {
         let db = Firestore.firestore()
-        guard let eventId = event.id else { return }
-
-        let eventData: [String: Any] = [
-            "title": event.title,
-            "location": event.location,
-            "description": event.description,
-            "date": event.date ?? Date()
-        ]
-
-        db.collection("events").document(eventId).updateData(eventData) { error in
+        
+        // Use the event's firestoreData property
+        db.collection("events").document(event.id).updateData(event.firestoreData) { error in
             if let error = error {
-                print("Error updating event: \(error.localizedDescription)")
+                print("❌ Error updating event: \(error.localizedDescription)")
+                errorMessage = "Failed to update event: \(error.localizedDescription)"
+                showError = true
             } else {
-                print("Event updated successfully!")
+                print("✅ Event updated successfully!")
                 DispatchQueue.main.async {
                     presentationMode.wrappedValue.dismiss()
                 }

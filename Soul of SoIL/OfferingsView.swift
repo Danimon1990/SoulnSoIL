@@ -6,6 +6,7 @@ struct OfferingsView: View {
     @State private var filteredOffers: [Offer] = []
     @State private var searchText: String = ""
     @State private var selectedSortOption: SortOption = .alphabetical
+    @State private var providerInfo: [String: (name: String, contact: String?)] = [:]
 
     private let dataLoader = DataLoader()
 
@@ -25,6 +26,9 @@ struct OfferingsView: View {
                     .onChange(of: searchText) {
                         filterOffers()
                     }
+                    .onSubmit {
+                        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+                    }
 
                 // Sorting Picker
                 Picker("Sort by", selection: $selectedSortOption) {
@@ -40,36 +44,29 @@ struct OfferingsView: View {
 
                 // Offers List
                 List(filteredOffers, id: \.id) { offer in
-                    VStack(alignment: .leading, spacing: 10) {
-                        Text(offer.title)
-                            .font(.headline)
+                    NavigationLink(destination: OfferView(
+                        offer: offer,
+                        providerName: providerInfo[offer.id]?.name ?? "Unknown Provider",
+                        providerContact: providerInfo[offer.id]?.contact
+                    )) {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text(offer.title)
+                                .font(.headline)
 
-                        Text("Type: \(offer.type)")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+                            if !offer.type.isEmpty {
+                                Text("Category: \(offer.type)")
+                                    .font(.footnote)
+                                    .foregroundColor(.gray)
+                            }
 
-                        if !offer.type.isEmpty {
-                            Text("Category: \(offer.type)")
-                                .font(.footnote)
-                                .foregroundColor(.gray)
+                            if let contact = offer.contact, !contact.isEmpty {
+                                Text("Contact: \(contact)")
+                                    .font(.footnote)
+                                    .foregroundColor(.blue)
+                            }
                         }
-
-                        if let location = offer.contact, !location.isEmpty {
-                            Text("Location: \(location)")
-                                .font(.footnote)
-                                .foregroundColor(.gray)
-                        }
-
-                        Text(offer.description)
-                            .font(.body)
-
-                        if let contact = offer.contact, !contact.isEmpty {
-                            Text("Contact: \(contact)")
-                                .font(.footnote)
-                                .foregroundColor(.blue)
-                        }
+                        .padding(.vertical, 5)
                     }
-                    .padding(.vertical, 5)
                 }
                 .listStyle(PlainListStyle())
             }
@@ -94,11 +91,23 @@ struct OfferingsView: View {
                 }
                 self.dataLoader.loadOfferings(people: people, projects: projects) { offers in
                     print("✅ Offers Loaded: \(offers.count)")
-                    offers.forEach { print("Offer: \($0.title), Type: \($0.type), Contact: \($0.contact ?? "N/A")") }
+                    
+                    // Store provider information
+                    for person in people {
+                        for offer in person.offers {
+                            providerInfo[offer.id] = (name: "\(person.firstName) \(person.lastName)", contact: person.phoneNumber)
+                        }
+                    }
+                    
+                    for project in projects {
+                        for offer in project.offers {
+                            providerInfo[offer.id] = (name: project.name, contact: project.phoneNumber)
+                        }
+                    }
                     
                     self.offers = offers
-                    self.filteredOffers = offers // Initialize filtered list
-                    sortOffers() // Sort initially
+                    self.filteredOffers = offers
+                    sortOffers()
                 }
             }
         }

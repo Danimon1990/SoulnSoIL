@@ -79,18 +79,6 @@ extension User {
     }
 }
 
-// Struct for Events
-struct Event: Identifiable, Codable {
-    @DocumentID var id: String?
-    var title: String
-    var location: String
-    var town: String
-    var description: String
-    var date: Date?
-    var createdBy: String
-}
-
-
 // Struct for Posts
 struct Post: Identifiable, Codable {
     @DocumentID var id: String? // Firestore document ID (Optional)
@@ -113,8 +101,6 @@ struct Post: Identifiable, Codable {
         case categories
         case status
     }
-
-    
 
     // 🔹 Custom Encoder for Firestore Timestamp Conversion
     func encode(to encoder: Encoder) throws {
@@ -145,9 +131,35 @@ struct Comment: Identifiable, Codable {
 class DataLoader {
     private let db = Firestore.firestore()
     
+    // Load Events Data
+    func loadEventsData(completion: @escaping ([Event]?) -> Void) {
+        db.collection("events").getDocuments { (querySnapshot, error) in
+            if let error = error {
+                print("❌ Error fetching events: \(error.localizedDescription)")
+                completion(nil)
+                return
+            }
+            
+            guard let documents = querySnapshot?.documents else {
+                print("⚠️ No events found")
+                completion(nil)
+                return
+            }
+            
+            let events = documents.compactMap { document in
+                return Event(document: document)
+            }
+            
+            print("✅ Loaded \(events.count) events from Firestore")
+            completion(events)
+        }
+    }
+    
     // Load People JSON Data
     func loadPeopleData(completion: @escaping ([User]?) -> Void) {
-        db.collection("users").getDocuments { (querySnapshot, error) in
+        db.collection("users")
+          .whereField("isInDirectory", isEqualTo: true)
+          .getDocuments { (querySnapshot, error) in
             if let error = error {
                 print("❌ Error fetching people: \(error.localizedDescription)")
                 completion(nil)
@@ -278,45 +290,6 @@ class DataLoader {
             }
 
             completion(projects)
-        }
-    }
-    
-    // Load Events JSON Data
-    func loadEventsData(completion: @escaping ([Event]?) -> Void) {
-        db.collection("events").getDocuments { (querySnapshot, error) in
-            if let error = error {
-                print("Error fetching events: \(error.localizedDescription)")
-                completion(nil)
-                return
-            }
-            
-            guard let documents = querySnapshot?.documents else {
-                print("No events found.")
-                completion(nil)
-                return
-            }
-            
-            var events: [Event] = []
-            
-            for document in documents {
-                let data = document.data()
-                
-                let id = document.documentID
-                let title = data["title"] as? String ?? "Untitled Event"
-                let location = data["location"] as? String ?? "Unknown Location"
-                let description = data["description"] as? String ?? "No description provided"
-                let createdBy = data["createdBy"] as? String ?? "Unknown User"
-                let town = data["town"] as? String ?? "Unknown Town"
-                
-                // ✅ Convert Firestore Timestamp to Date
-                let timestamp = data["date"] as? Timestamp
-                let date = timestamp?.dateValue()  // ✅ This converts FIRTimestamp to Date
-                
-                let event = Event(id: id, title: title, location: location, town: town, description: description, date: date, createdBy: createdBy)
-                events.append(event)
-            }
-            
-            completion(events)
         }
     }
     
